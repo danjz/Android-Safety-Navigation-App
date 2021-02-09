@@ -5,10 +5,12 @@
     android:layout_height="match_parent">
 
     <fragment
+        android:id="@+id/google_map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/google_map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="false" />
 
     <SearchView
         android:layout_width="match_parent"
@@ -24,12 +26,16 @@
 
     <Button
         android:id="@+id/currentlocation"
-        android:layout_width="40dp"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="110dp"
+        android:layout_marginTop="120dp"
         android:layout_marginRight="10dp"
-        
-        app:backgroundTint="#00FFFFFF"
-        app:icon="@android:drawable/ic_menu_mylocation" />
+        android:gravity="center"
+        android:background="@drawable/circlebutton"
+        app:backgroundTint="#FFFFFF"
+        app:icon="@android:drawable/ic_menu_mylocation"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
+
 </RelativeLayout>
