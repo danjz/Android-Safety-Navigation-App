@@ -50,5 +50,46 @@ public class HttpHandler {
             Log.d("exception",e.toString());
         }
         return null; //return null if connection couldn't be made
+     }
+    /**
+     * <p>Calls the OpenStreetMap API and saves the output to a string<b>Please don't spam this coz the API owners will get mad</b></p>
+     * @param city The name of the city
+     * @return     A string containg the XML from the API call.
+     * @author Ricky Chu
+     */
+    public String getLocations(String city){
+        String baseUrl = "https://overpass-api.de/api/interpreter?data=";
+        String areaUrl = "area[name=" + city + "];";
+        String tagUrl = "nwr[lit=yes][foot=yes](area);out center;";
+
+        String finalUrl = baseUrl + areaUrl + tagUrl;
+
+        try {
+            //turn string url into URL object
+            URL url = new URL(finalUrl);
+            //open a connection to the URL
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+            //store the direction API response stream
+            InputStream inputStream = con.getInputStream();
+
+            //turn the response stream into a string
+            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuffer sb = new StringBuffer();
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+
+            //disconnect the http connection
+            con.disconnect();
+
+            //return the string (json)
+            return sb.toString();
+
+        } catch (Exception e) { //catch and display any errors
+            Log.d("exception",e.toString());
+        }
+        return null; //return null if connection couldn't be made
     }
 }
