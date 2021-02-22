@@ -27,7 +27,7 @@
         -->
         <activity
             android:name=".LoginActivity"
-            android:label="App Name">
+            android:label="LoginScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,6 +37,9 @@
         <activity
             android:name=".Profile"
             android:label="Profile">
+        </activity>
+        <activity android:name=".MainActivity"
+            android:label="MainActivity">
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
