@@ -16,12 +16,9 @@ public class PhoneDialer extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//Set the view to display
-        setContentView(R.layout.phone_dialer);
 
 //Find controls in view
         et_phone = (EditText)findViewById(R.id.et_phone);
-
     }
 
     /**
