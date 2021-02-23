@@ -41,6 +41,9 @@
         <activity android:name=".MainActivity"
             android:label="MainActivity">
         </activity>
+        <activity android:name=".PhoneDialer"
+            android:label="PhoneDialer">
+        </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="API_KEY_HERE" />
