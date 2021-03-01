@@ -53,9 +53,9 @@ public class test_accelerometer extends AppCompatActivity implements SensorEvent
             public void onClick(View v) {
                 sensorManager.unregisterListener(test_accelerometer.this);
                 Toast.makeText(test_accelerometer.this,"stop",Toast.LENGTH_SHORT).show();
-                tvx.setText("ACC_X!");
-                tvy.setText("ACC_Y!");
-                tvz.setText("ACC_Z!");
+                tvx.setText("ACC_X:");
+                tvy.setText("ACC_Y:");
+                tvz.setText("ACC_Z:");
             }
         });
 
