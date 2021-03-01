@@ -16,6 +16,7 @@ public class Profile extends AppCompatActivity {
 
     TextView name, email;
     Button logout_button;
+    Button bt_ACC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,15 @@ public class Profile extends AppCompatActivity {
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        bt_ACC = findViewById(R.id.bt_ACC);
+        bt_ACC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Profile.this,test_accelerometer.class);
                 startActivity(intent);
             }
         });
