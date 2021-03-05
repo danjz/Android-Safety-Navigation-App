@@ -2,6 +2,7 @@ package com.example.googlemapsnavbar3;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.Manifest;
 import android.app.PendingIntent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +33,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.io.File;
+import java.io.IOException;
 
 public class MapsFragment extends Fragment {
 
@@ -68,18 +73,40 @@ public class MapsFragment extends Fragment {
 
             Button searchButton = getView().getRootView().findViewById(R.id.buttonSearch);
             searchButton.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
                 public void onClick(View v) {
 
-                    String destination = (String) destinationEditText.getText().toString();
-                    Parser parser = new Parser(googleMap, tview, "Cardiff", destination);
-                    parser.execute();
-                    dest_latLng = parser.getLatLng();
-                    addGeofence(dest_latLng,GEOFENCE_RADIUS);
+                    boolean fetched = false;
+                    PlaceList checkpoints = null;
+                    try {
+                        File file = getContext().getFileStreamPath("safePlaces.txt");
+                        if (file.exists()){
+                            PlaceList places = PlaceFileHandler.loadPlacesFromFile("safePlaces.txt", getContext());
+                            checkpoints =  places.getUpToNthLocation(3);
+                            fetched = true;
+                        }
+                        else{
+                            PlaceFileHandler.savePlacesToFile("safePlaces.txt", getContext());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    finally {
+                        String destination = (String) destinationEditText.getText().toString();
+                        Parser parser;
+                        if (fetched){
+                            parser = new Parser(googleMap, tview, "Cardiff+Castle", destination, checkpoints);
+                        }
+                        else{
+                            parser = new Parser(googleMap, tview, "Cardiff+Castle", destination, new PlaceList());
+                        }
+                        parser.execute();
+                        dest_latLng = parser.getLatLng();
+                        addGeofence(dest_latLng,GEOFENCE_RADIUS);
+                    }
                 }
             });
-
-
             enableUserLocation(googleMap);
         }
     };
