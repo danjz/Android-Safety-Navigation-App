@@ -27,6 +27,16 @@ public class Parser extends AsyncTask<Void, Void, String> {
     private GeofenceHelper geofenceHelper;
     private double lat;
     private double lng;
+    
+    private PlaceList checkpoints;
+
+    public Parser(GoogleMap googleMap, TextView durationText, String origin, String destination, PlaceList checkpoints) {
+        this.googleMap = googleMap;
+        this.durationView = durationText;
+        this.origin = origin;
+        this.destination = destination;
+        this.checkpoints = checkpoints;
+    }
 
     public Parser(GoogleMap googleMap, TextView durationText, String origin, String destination) {
         this.googleMap = googleMap;
@@ -41,7 +51,7 @@ public class Parser extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void...arg0) {
         //Create instance of httpHandler and call its getJSON() method
-        HttpHandler httpHandler = new HttpHandler(origin,destination);
+        HttpHandler httpHandler = new HttpHandler(origin,destination,checkpoints);
         //Get JSON string
         String jsonString = httpHandler.getJSON();
 
