@@ -7,14 +7,14 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:701334470070:android:2930c39f8f3ee15baf1517",
+        "mobilesdk_app_id": "1:701334470070:android:365530013514c86baf1517",
         "android_client_info": {
           "package_name": "com.example.googlemapsnavbar3"
         }
       },
       "oauth_client": [
         {
-          "client_id": "701334470070-s0rb282u2heupqd5ei8g7h2fp14svbvl.apps.googleusercontent.com",
+          "client_id": "701334470070-7td9b54qhnkr8ij9mcn5tbcmid51rfte.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.googlemapsnavbar3",
