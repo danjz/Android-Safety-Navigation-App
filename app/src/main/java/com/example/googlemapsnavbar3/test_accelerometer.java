@@ -22,6 +22,7 @@ public class test_accelerometer extends AppCompatActivity implements SensorEvent
     private TextView tvx;
     private  TextView tvy;
     private  TextView tvz;
+    private  TextView triAxial;
     private  TextView temp;
 
     @Override
@@ -33,6 +34,7 @@ public class test_accelerometer extends AppCompatActivity implements SensorEvent
         tvx = (TextView)findViewById(R.id.tvx);
         tvy = (TextView)findViewById(R.id.tvy);
         tvz = (TextView)findViewById(R.id.tvz);
+        triAxial = (TextView)findViewById(R.id.triAxial);
         temp = (TextView)findViewById(R.id.temp);
 
         Button start = (Button)findViewById(R.id.bt_start);
@@ -56,6 +58,7 @@ public class test_accelerometer extends AppCompatActivity implements SensorEvent
                 tvx.setText("ACC_X:");
                 tvy.setText("ACC_Y:");
                 tvz.setText("ACC_Z:");
+                triAxial.setText("tri-axial:");
             }
         });
 
@@ -104,8 +107,12 @@ public class test_accelerometer extends AppCompatActivity implements SensorEvent
             tvx.setText("ACC_X: " + Float.toString(values[0]));
             tvy.setText("ACC_Y: " + Float.toString(values[1]));
             tvz.setText("ACC_Z: " + Float.toString(values[2]));
+            //calculate the total acceleration of x,y,z
+            float a = (float)Math.sqrt(values[0] * values[0] +
+                    values[1] * values[1] + values[2] * values[2]);
+            triAxial.setText("tri-axial: " + Float.toString(a));
 
-
+            //test data
             if(values[0] > 5){
                 temp.setText("dangerous");
                 temp.setTextColor(Color.RED);

@@ -30,6 +30,15 @@
         android:layout_margin="20dp"
         android:text="ACC_z!"
         />
+
+    <TextView
+        android:id="@+id/triAxial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="tri-axial!"
+        />
+
     <TextView
         android:id="@+id/temp"
         android:layout_width="wrap_content"
