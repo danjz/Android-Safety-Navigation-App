@@ -49,7 +49,7 @@ public class PlaceList {
      * @param location The location from which the 'sorting by distance' occurs
      * @author Ricky Chu
      */
-    private void sortByDistanceFromLocation(Place location){
+    public void sortByDistanceFromLocation(Place location){
         Collections.sort(places, new Comparator<Place>() {
             @Override
             public int compare(Place l1, Place l2) {
@@ -66,7 +66,7 @@ public class PlaceList {
      * @param end   The end places of the route
      * @author Ricky Chu
      */
-    private void sortByDistanceFromVector(Place start, Place end){
+    public void sortByDistanceFromVector(Place start, Place end){
         Collections.sort(places, new Comparator<Place>() {
             @Override
             public int compare(Place l1, Place l2) {

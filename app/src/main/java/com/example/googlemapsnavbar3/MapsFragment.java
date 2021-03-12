@@ -79,10 +79,14 @@ public class MapsFragment extends Fragment {
 
                     boolean fetched = false;
                     PlaceList checkpoints = null;
+                    String destination = (String) destinationEditText.getText().toString();
                     try {
                         File file = getContext().getFileStreamPath("safePlaces.txt");
                         if (file.exists()){
                             PlaceList places = PlaceFileHandler.loadPlacesFromFile("safePlaces.txt", getContext());
+                            Place loc1 = Place.stringToPlace(destination, getContext());
+                            Place loc2 = Place.stringToPlace("Cardiff+Castle", getContext());
+                            places.sortByDistanceFromVector(loc1,loc2);
                             checkpoints =  places.getUpToNthLocation(3);
                             fetched = true;
                         }
@@ -93,7 +97,6 @@ public class MapsFragment extends Fragment {
                         e.printStackTrace();
                     }
                     finally {
-                        String destination = (String) destinationEditText.getText().toString();
                         Parser parser;
                         if (fetched){
                             parser = new Parser(googleMap, tview, "Cardiff+Castle", destination, checkpoints);
