@@ -7,13 +7,17 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ThirdFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ThirdFragment extends Fragment {
+public class ThirdFragment extends Fragment implements View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -53,6 +57,25 @@ public class ThirdFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+//        Button button1 = getView().findViewById(R.id.savedDestinationsButton);
+//        Button button2 = getView().findViewById(R.id.savedContactsButton);
+//        Button button3 = getView().findViewById(R.id.mapSettingsButton);
+//        Button button4 = getView().findViewById(R.id.themeSettingsButton);
+//        Button button5 = getView().findViewById(R.id.batterySavingSettingsButton);
+//        Button button6 = getView().findViewById(R.id.privAndSecButton);
+//        Button button7 = getView().findViewById(R.id.helpAndSupportButton);
+//        Button button8 = getView().findViewById(R.id.aboutUsButton);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.savedDestinationsButton:
+               // Toast.makeText(ThirdFragment.class, "Button 1 clicked", LENGTH_SHORT).show();
+                break;
+        }
     }
 
     @Override
@@ -62,3 +85,4 @@ public class ThirdFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_third, container, false);
     }
 }
+
