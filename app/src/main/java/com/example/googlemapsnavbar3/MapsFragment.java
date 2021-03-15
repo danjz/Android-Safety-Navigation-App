@@ -48,6 +48,8 @@ public class MapsFragment extends Fragment {
     private float GEOFENCE_RADIUS = 200;
     private String GEOFENCE_ID = "DEST_GEOFENCE";
 
+    private PlaceList routeList;
+
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
         /**
@@ -81,13 +83,16 @@ public class MapsFragment extends Fragment {
                     PlaceList checkpoints = null;
                     String destination = (String) destinationEditText.getText().toString();
                     try {
+                        //Loads file, If the file doesn't exist then it creates it.
                         File file = getContext().getFileStreamPath("safePlaces.txt");
                         if (file.exists()){
+                            //Sort the checkpoints by distance from the route
+                            //Then get the top 3 closest checkpoints
                             PlaceList places = PlaceFileHandler.loadPlacesFromFile("safePlaces.txt", getContext());
                             Place loc1 = Place.stringToPlace(destination, getContext());
                             Place loc2 = Place.stringToPlace("Cardiff+Castle", getContext());
                             places.sortByDistanceFromVector(loc1,loc2);
-                            checkpoints =  places.getUpToNthLocation(3);
+                            checkpoints = places.getUpToNthLocation(3);
                             fetched = true;
                         }
                         else{
@@ -107,6 +112,14 @@ public class MapsFragment extends Fragment {
                         parser.execute();
                         dest_latLng = parser.getLatLng();
                         addGeofence(dest_latLng,GEOFENCE_RADIUS);
+
+                        //The list of legs
+                        routeList = parser.getRoute();
+                        PlaceList geoFenceCenterList = routeList.generateGeofenceCenters();
+                        for(Place place: geoFenceCenterList){
+                            addGeofence(place.toLatLng(), 30);
+                        }
+
                     }
                 }
             });

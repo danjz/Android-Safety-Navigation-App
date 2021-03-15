@@ -1,13 +1,19 @@
 package com.example.googlemapsnavbar3;
 
-import android.location.Location;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
-public class PlaceList {
+public class PlaceList implements Iterable<Place> {
 
     private ArrayList<Place> places;
 
@@ -19,13 +25,31 @@ public class PlaceList {
         this.places = locations;
     }
 
+    public PlaceList(List<LatLng> latLngList){
+        for (LatLng latLng: latLngList){
+            double latitude = latLng.latitude;
+            double longitude = latLng.longitude;
+            this.places.add(new Place(latitude, longitude));
+        }
+    }
+
     public void add(Place location){
         places.add(location);
     }
 
-    public ArrayList<Place> getLocations(){
-        return places;
+    /**
+     * Returns an iterator over elements of type place.
+     * @return an Iterator.
+     */
+    @NonNull
+    @Override
+    public Iterator<Place> iterator() {
+        return places.iterator();
     }
+
+    //public ArrayList<Place> getLocations(){
+    //    return places;
+    //}
 
     /**
      * <p>Gets the top N places from a PlaceList</p>
@@ -91,5 +115,24 @@ public class PlaceList {
             output = output + lon + "%7C";
         }
         return output;
+    }
+
+    public PlaceList generateGeofenceCenters(){
+        PlaceList geoCenters = new PlaceList();
+
+        int numSplits = 5;
+        for(int i = 0; i < places.size() - 1; i++){
+
+            LatLng from = places.get(i).toLatLng();
+            LatLng to = places.get(i + 1).toLatLng();
+
+            for (int j = 0; j < numSplits; j++){
+                LatLng center = SphericalUtil.interpolate(from, to, 1/numSplits);
+                Place placeCenter = new Place(center.latitude, center.longitude);
+                geoCenters.add(placeCenter);
+
+            }
+        }
+        return geoCenters;
     }
 }

@@ -29,6 +29,7 @@ public class Parser extends AsyncTask<Void, Void, String> {
     private double lng;
     
     private PlaceList checkpoints;
+    private PlaceList route;
 
     public Parser(GoogleMap googleMap, TextView durationText, String origin, String destination, PlaceList checkpoints) {
         this.googleMap = googleMap;
@@ -100,6 +101,7 @@ public class Parser extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String encodedPolyline) {
         List<LatLng> decodedPath = PolyUtil.decode(encodedPolyline);
+        this.route = new PlaceList(decodedPath);
         this.googleMap.addPolyline(new PolylineOptions().addAll(decodedPath));
 
     }
@@ -112,11 +114,12 @@ public class Parser extends AsyncTask<Void, Void, String> {
         return this.lng;
     }
 
+    public PlaceList getRoute(){
+        return this.route;
+    }
+
     public LatLng getLatLng() {
         return new LatLng(lat,lng);
     }
-
-
-
 
 }
