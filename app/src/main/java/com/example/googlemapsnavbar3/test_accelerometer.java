@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class test_accelerometer extends AppCompatActivity implements SensorEvent
                         SensorManager.SENSOR_DELAY_NORMAL);
             }
         });
+
         Button end = (Button)findViewById(R.id.bt_end);
         end.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +68,7 @@ public class test_accelerometer extends AppCompatActivity implements SensorEvent
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sensorManager.unregisterListener(test_accelerometer.this);
                 finish();
             }
         });
