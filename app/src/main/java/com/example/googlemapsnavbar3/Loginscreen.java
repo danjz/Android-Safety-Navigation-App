@@ -87,7 +87,7 @@ public class Loginscreen extends AppCompatActivity {
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 // error message
-                Toast.makeText(this, "big error",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "SHA1 fingerprint error",Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -104,7 +104,7 @@ public class Loginscreen extends AppCompatActivity {
                             startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(Loginscreen.this, "Authentication failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Loginscreen.this, "Sorry you've been banned from the app", Toast.LENGTH_SHORT).show();
                         }
 
                         // ...

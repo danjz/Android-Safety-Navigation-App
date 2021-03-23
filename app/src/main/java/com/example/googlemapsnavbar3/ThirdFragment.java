@@ -1,16 +1,25 @@
 package com.example.googlemapsnavbar3;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.auth.FirebaseAuth;
+
 import static android.widget.Toast.LENGTH_SHORT;
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,6 +27,8 @@ import static android.widget.Toast.LENGTH_SHORT;
  * create an instance of this fragment.
  */
 public class ThirdFragment extends Fragment implements View.OnClickListener {
+    TextView name;
+    Button logout;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,6 +60,22 @@ public class ThirdFragment extends Fragment implements View.OnClickListener {
         fragment.setArguments(args);
         return fragment;
     }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View ThirdFragment = inflater.inflate(R.layout.fragment_third, container, false);
+        // Inflate the layout for this fragment
+        Button logout = (Button) ThirdFragment.findViewById(R.id.LogOut);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getApplicationContext(), Loginscreen.class);
+                startActivity(intent);
+            }
+        });
+        return ThirdFragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,15 +84,6 @@ public class ThirdFragment extends Fragment implements View.OnClickListener {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-//        Button button1 = getView().findViewById(R.id.savedDestinationsButton);
-//        Button button2 = getView().findViewById(R.id.savedContactsButton);
-//        Button button3 = getView().findViewById(R.id.mapSettingsButton);
-//        Button button4 = getView().findViewById(R.id.themeSettingsButton);
-//        Button button5 = getView().findViewById(R.id.batterySavingSettingsButton);
-//        Button button6 = getView().findViewById(R.id.privAndSecButton);
-//        Button button7 = getView().findViewById(R.id.helpAndSupportButton);
-//        Button button8 = getView().findViewById(R.id.aboutUsButton);
 
     }
 
@@ -78,11 +96,5 @@ public class ThirdFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_third, container, false);
-    }
 }
 
