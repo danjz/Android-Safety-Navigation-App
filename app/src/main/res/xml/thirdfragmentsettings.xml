@@ -1,42 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference
-        android:key="testcheckbox"
-        android:title="Checkbox works?" />
     <PreferenceScreen
         android:key="dest_saved"
         android:title="Saved Destinations"
         android:summary="Edit and remove saved destinations">
+        <intent android:targetPackage="com.example.googlemapsnavbar3"
+                android:targetClass="com.example.googlemapsnavbar3.SavedDestinations"/>
     </PreferenceScreen>
     <PreferenceScreen
         android:key="map_settings"
         android:title="Map Settings"
         android:summary="Change the way the map is visualised">
+        <intent android:targetPackage="com.example.googlemapsnavbar3"
+                android:targetClass="com.example.googlemapsnavbar3.MapSettings"/>
     </PreferenceScreen>
     <PreferenceScreen
         android:key="appearance"
         android:title="Appearance"
         android:summary="Spruce up the app to your liking">
+        <intent android:targetPackage="com.example.googlemapsnavbar3"
+                android:targetClass="com.example.googlemapsnavbar3.ThemeandAppearance"/>
     </PreferenceScreen>
     <PreferenceScreen
         android:key="batteryusage"
         android:title="Optimise Battery Usage"
         android:summary="Adjust settings to improve battery life">
+        <intent android:targetPackage="com.example.googlemapsnavbar3"
+                android:targetClass="com.example.googlemapsnavbar3.BatterySavingSettings"/>
     </PreferenceScreen>
     <PreferenceScreen
         android:key="privandsec"
         android:title="Privacy and Security"
         android:summary="Adjust privacy and security settings">
+        <intent android:targetPackage="com.example.googlemapsnavbar3"
+                android:targetClass="com.example.googlemapsnavbar3.PrivacyandSecurity"/>
     </PreferenceScreen>
     <PreferenceScreen
         android:key="helpandsupport"
         android:title="Help and Support"
         android:summary="About us, Q+A, Contact us">
+        <intent android:targetPackage="com.example.googlemapsnavbar3"
+                android:targetClass="com.example.googlemapsnavbar3.HelpandSupport"/>
     </PreferenceScreen>
     <PreferenceScreen
         android:key="terms_of_service"
         android:title="Terms of Service"
         android:summary="Conditions which you agree to by using our app">
+        <intent android:targetPackage="com.example.googlemapsnavbar3"
+                android:targetClass="com.example.googlemapsnavbar3.TermsOfService"/>
     </PreferenceScreen>
 
 

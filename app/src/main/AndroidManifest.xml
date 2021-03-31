@@ -45,6 +45,20 @@
 
         <activity android:name=".MainActivity">
         </activity>
+        <activity android:name=".SavedDestinations">
+        </activity>
+        <activity android:name=".BatterySavingSettings">
+        </activity>
+        <activity android:name=".HelpandSupport">
+        </activity>
+        <activity android:name=".MapSettings">
+        </activity>
+        <activity android:name=".PrivacyandSecurity">
+        </activity>
+        <activity android:name=".TermsOfService">
+        </activity>
+        <activity android:name=".ThemeandAppearance">
+        </activity>
     </application>
 
 </manifest>
