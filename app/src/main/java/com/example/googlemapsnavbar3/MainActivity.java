@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         //bottom navigation menu code
 
+
         //Find and initialize BottomNavigationView and NavController
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         NavController navController = Navigation.findNavController(this,  R.id.fragment);
@@ -78,4 +81,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void storeInput(View view) {
+        EditText phoneNumber = (EditText)findViewById(R.id.phone_number);
+        TextView testing = (TextView)findViewById(R.id.textView5);
+        String text = phoneNumber.getText().toString();
+        Toast.makeText(this, "The phone number has been saved", Toast.LENGTH_SHORT).show();
+        testing.setText(text);
+    }
 }
