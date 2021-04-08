@@ -106,7 +106,8 @@ public class FallAndFightDetection extends AppCompatActivity implements SensorEv
             triAxial.setText("tri-axial: " + Float.toString(triA));
 
             //the value of triA is the threshold of accelerometer
-            if(triA > 50){
+            if(triA > 55){
+
                 vibrator.vibrate(1000);//Duration of vibration
 
                 temp.setText("dangerous");
