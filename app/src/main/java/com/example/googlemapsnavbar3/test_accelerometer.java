@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 public class test_accelerometer extends AppCompatActivity implements SensorEventListener {
     private SensorManager sensorManager;//define sensor Manager
+    private Vibrator vibrator;// define a vibrator
     private TextView tvx;
     private  TextView tvy;
     private  TextView tvz;
@@ -31,6 +32,7 @@ public class test_accelerometer extends AppCompatActivity implements SensorEvent
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_accelerometer);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);//obtain sensor Manager
+        vibrator = (Vibrator)this.getSystemService(this.VIBRATOR_SERVICE);//obtain vibrator
 
         tvx = (TextView)findViewById(R.id.tvx);
         tvy = (TextView)findViewById(R.id.tvy);
@@ -96,27 +98,19 @@ public class test_accelerometer extends AppCompatActivity implements SensorEvent
         if(event.sensor.getType()==Sensor.TYPE_ACCELEROMETER) {
 
             float[] values = event.values;
-//            float[] gravity = new float[3];
-//
-//            // alpha 由 t / (t + dT)得到
-//            // t为滤波器时间常量，为传感器单次采样时间
-//            // dT为采样频率
-//            final float alpha = (float) 0.1;
-//            for(int i = 0 ;i < 3; i++){
-//                gravity[i]  = alpha * gravity[i] + (1 - alpha) * values[i];
-//                values[i] = values[i] - gravity[i];
-//            }
 
             tvx.setText("ACC_X: " + Float.toString(values[0]));
             tvy.setText("ACC_Y: " + Float.toString(values[1]));
             tvz.setText("ACC_Z: " + Float.toString(values[2]));
             //calculate the total acceleration of x,y,z
-            float a = (float)Math.sqrt(values[0] * values[0] +
+            float triA = (float)Math.sqrt(values[0] * values[0] +
                     values[1] * values[1] + values[2] * values[2]);
-            triAxial.setText("tri-axial: " + Float.toString(a));
+            triAxial.setText("tri-axial: " + Float.toString(triA));
 
-            //test data
-            if(values[0] > 5){
+            //The value of a is the threshold
+            if(triA > 50){
+                vibrator.vibrate(1000);//Duration of vibration
+
                 temp.setText("dangerous");
                 temp.setTextColor(Color.RED);
             }
