@@ -8,8 +8,15 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
@@ -39,14 +47,11 @@ import java.io.IOException;
 
 public class MapsFragment extends Fragment {
 
-    private GeofencingClient geofencingClient;
-    private GeofenceHelper geofenceHelper;
+    private GoogleMap mMap;
     private int FINE_LOCATION_ACCESS_CODE = 10001;
-    private double dest_lat;
-    private double dest_lng;
-    private LatLng dest_latLng;
-    private float GEOFENCE_RADIUS = 200;
-    private String GEOFENCE_ID = "DEST_GEOFENCE";
+    private LatLng current_latLng;
+    private FusedLocationProviderClient fusedLocationClient;
+    private Parser parser;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -54,32 +59,46 @@ public class MapsFragment extends Fragment {
          * Manipulates the map once available.
          * This callback is triggered when the map is ready to be used.
          * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
          * If Google Play services is not installed on the device, the user will be prompted to
          * install it inside the SupportMapFragment. This method will only be triggered once the
          * user has installed Google Play services and returned to the app.
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
+            mMap = googleMap;
+
+            //get move camera to cardiff / add marker
             LatLng cardiff = new LatLng(51.4822, -3.1812);
-            googleMap.addMarker(new MarkerOptions().position(cardiff).title("Marker in Cardiff"));
+            //googleMap.addMarker(new MarkerOptions().position(cardiff).title("Marker in Cardiff"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cardiff, 16));
 
+            //Get timer text box
             TextView tview = getView().getRootView().findViewById(R.id.durationText);
-            tview.setText("Duration in seconds");
+            tview.setText("");
 
+            //Get destination edit field
             EditText destinationEditText = getView().getRootView().findViewById(R.id.editTextDestination);
 
+            updateCurrentLocation();
+            enableUserLocation();
 
+
+            //Add search button functionality
             Button searchButton = getView().getRootView().findViewById(R.id.buttonSearch);
             searchButton.setOnClickListener(new View.OnClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
                 public void onClick(View v) {
+                    updateCurrentLocation();
+                    getBackgroundPermission();
+                    Log.d("HALLO ", "onClick: ");
+
+                    String startLocation = current_latLng.latitude + "," + current_latLng.longitude;
+                    String destination = (String) destinationEditText.getText().toString();
 
                     boolean fetched = false;
                     PlaceList checkpoints = null;
-                    String destination = (String) destinationEditText.getText().toString();
+
                     try {
                         File file = getContext().getFileStreamPath("safePlaces.txt");
                         if (file.exists()){
@@ -99,18 +118,15 @@ public class MapsFragment extends Fragment {
                     finally {
                         Parser parser;
                         if (fetched){
-                            parser = new Parser(googleMap, tview, "Cardiff+Castle", destination, checkpoints);
+                            parser = new Parser(googleMap, tview, startLocation, destination, getContext(),checkpoints);
                         }
                         else{
-                            parser = new Parser(googleMap, tview, "Cardiff+Castle", destination, new PlaceList());
+                            parser = new Parser(googleMap, tview, startLocation, destination,getContext(), new PlaceList());
                         }
                         parser.execute();
-                        dest_latLng = parser.getLatLng();
-                        addGeofence(dest_latLng,GEOFENCE_RADIUS);
                     }
                 }
             });
-            enableUserLocation(googleMap);
         }
     };
 
@@ -118,8 +134,17 @@ public class MapsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        geofencingClient = LocationServices.getGeofencingClient(getContext());
-        geofenceHelper = new GeofenceHelper(getContext());
+        //initialize fusedlocationclient which is used for getting current user location
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        //register the receiver which receives from geofenceBroadcastReceiver
+        getActivity().registerReceiver(mReceiver, new IntentFilter("GEOFENCE_TRIGGER"));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().unregisterReceiver(mReceiver);
     }
 
     @Nullable
@@ -141,59 +166,97 @@ public class MapsFragment extends Fragment {
 
     }
 
-    private void enableUserLocation(GoogleMap mMap) {
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+    /**
+     *adds button to locate current location and move cam to it
+     */
+    private void enableUserLocation() {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         } else {
             //Ask for permission
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                //Show dialog for why permission is needed, then ask for permission
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission
-                        .ACCESS_FINE_LOCATION}, FINE_LOCATION_ACCESS_CODE);
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+                //We need to show user a dialog for displaying why the permission is needed and then ask for the permission...
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_ACCESS_CODE);
             } else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission
-                        .ACCESS_FINE_LOCATION}, FINE_LOCATION_ACCESS_CODE);
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_ACCESS_CODE);
             }
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == FINE_LOCATION_ACCESS_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //have permission
-
-            } else {
-                //no permission
-            }
-
-        }
+    /**
+     * Ask the user for background permission
+     */
+    private void getBackgroundPermission() {
+        if (checkSinglePermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+            return; }
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.common_google_play_services_enable_title)
+                .setMessage(R.string.app_name)
+                .setPositiveButton(R.string.common_signin_button_text, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // this request will take user to Application's Setting page
+                        ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2000);
+                    }
+                })
+                .setNegativeButton(R.string.common_open_on_phone, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        dialog.dismiss();
+                    }
+                })
+                .create()
+                .show();
     }
 
-    private void addGeofence(LatLng latLng, float radius) {
-        Geofence geofence = geofenceHelper.getGeofence(GEOFENCE_ID, latLng, radius,
-                Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL);
-        GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(geofence);
-        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
+    /**
+     * Check if a specific permission has been given by the user
+     *
+     * @param permission the permission to check
+     * @return true if permission given
+     */
+    private boolean checkSinglePermission(String permission) {
+        return ContextCompat.checkSelfPermission(this.getContext(), permission) == PackageManager.PERMISSION_GRANTED;
+    }
 
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            geofencingClient.addGeofences(geofencingRequest, pendingIntent)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+    /**
+     * Updates current location on map, kinda only works on initial start up
+     */
+    private void updateCurrentLocation() {
+
+        if(checkSinglePermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d("Geofence success", "Geofence added");
+                        public void onSuccess(Location location) {
+                            if(location != null) {
+                                current_latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                                //Log.d("GET CURRENT LOCATION", "onSuccess: latLng " + current_latLng.toString());
+                            } else {
+                                //Log.d("CURRENT LOCATION NULL", "CURRENT LOCATION IS NULL ");
+                            }
+
                         }
                     })
-                    .addOnFailureListener(new OnFailureListener() {
+                    .addOnFailureListener(getActivity(), new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.d("Geofence error", geofenceHelper.getErrorString(e));
+                            Log.d("CURRENT LOCATION ERROR", "onFailure: " + e.getLocalizedMessage());
                         }
                     });
         }
-
     }
+
+
+
+    /**
+     * This receives a broadcast any time a geofence is triggered
+     * then calls parser's stop timer to stop arrival timer
+     */
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("broadcast receiver frag"," onRecieve"); //do something with intent
+            parser.stopTimer();
+        }
+    };
 }

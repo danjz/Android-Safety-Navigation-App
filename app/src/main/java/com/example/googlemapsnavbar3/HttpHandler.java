@@ -15,25 +15,34 @@ public class HttpHandler {
     private PlaceList places;
 
     public HttpHandler() {
-        this.origin = "Cardiff+Castle";
-        this.destination = "Cardiff+Bay";
     }
 
+    /**
+     * Takes in an origin and destination location in string form and calls teh the directions API
+     * using those as parameters
+     *
+     * @param origin
+     * @param destination
+     * @param places checkpoints
+     */
     public HttpHandler(String origin, String destination, PlaceList places) {
         this.origin = origin;
         this.destination = destination;
         this.places = places;
     }
 
-    //Make http connection to direction API and retrieve JSON data in string form
+    /**
+     * Make http connection to direction API and retrieve JSON data in string form
+     *
+     * @return JSON data in string form
+     */
     public String getJSON() {
         //generate api url
-        //TODO: create separate function to generate api URL based on user input
         String urlString = "https://maps.googleapis.com/maps/api/directions/json?";
         String ori = "origin=" + this.origin;
         String dest = "&destination=" + this.destination;
         String checks = places.toApiString();
-        String key = "&key=ENTER_API_KEY_HERE";
+        String key = "&key=API_KEY_HERE";
         String mode = "&mode=walking";
         urlString = urlString + ori + dest + checks + mode + key;
 
