@@ -1,4 +1,4 @@
-package com.example.googlemapsnavbar3;
+package com.example.googlemapsnavbar3.places;
 
 import android.content.Context;
 import android.location.Address;

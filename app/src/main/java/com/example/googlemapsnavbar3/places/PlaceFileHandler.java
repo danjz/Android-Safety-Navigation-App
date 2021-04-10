@@ -1,12 +1,13 @@
 
-package com.example.googlemapsnavbar3;
+package com.example.googlemapsnavbar3.places;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
+
+import com.example.googlemapsnavbar3.HttpHandler;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -21,7 +22,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

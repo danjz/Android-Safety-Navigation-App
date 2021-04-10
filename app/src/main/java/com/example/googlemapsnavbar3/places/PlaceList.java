@@ -1,6 +1,5 @@
-package com.example.googlemapsnavbar3;
+package com.example.googlemapsnavbar3.places;
 
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -16,6 +15,7 @@ import java.util.List;
 public class PlaceList implements Iterable<Place> {
 
     private ArrayList<Place> places;
+    private int pointer = 0;
 
     public PlaceList(){
         this.places = new ArrayList<>();
@@ -26,11 +26,38 @@ public class PlaceList implements Iterable<Place> {
     }
 
     public PlaceList(List<LatLng> latLngList){
+        this.places = new ArrayList<>();
         for (LatLng latLng: latLngList){
             double latitude = latLng.latitude;
             double longitude = latLng.longitude;
             this.places.add(new Place(latitude, longitude));
         }
+    }
+
+    public Place getCurrentCheckpoint(){
+        Place place = places.get(pointer);
+        return place;
+    }
+
+    /**
+     * Returns the time to the next checkpoint
+     * @return
+     */
+    public int timeToNextCheckpoint(){
+        Place current = places.get(pointer);
+        Place next = places.get(pointer + 1);
+
+        Double distance = current.distanceFromPlace(next);
+        //in kilometers
+
+        //Average walking speed is 5 km/h but we'll assume 3.5 to be safe
+        int time = (int) Math.floor(distance/3.5);
+        time = time * 3600;
+        return time;
+    }
+
+    public void goTonextCheckpoint(){
+        pointer++;
     }
 
     public void add(Place location){
@@ -47,9 +74,9 @@ public class PlaceList implements Iterable<Place> {
         return places.iterator();
     }
 
-    //public ArrayList<Place> getLocations(){
-    //    return places;
-    //}
+    public ArrayList<Place> getLocations(){
+        return places;
+    }
 
     /**
      * <p>Gets the top N places from a PlaceList</p>
@@ -130,7 +157,6 @@ public class PlaceList implements Iterable<Place> {
                 LatLng center = SphericalUtil.interpolate(from, to, 1/numSplits);
                 Place placeCenter = new Place(center.latitude, center.longitude);
                 geoCenters.add(placeCenter);
-
             }
         }
         return geoCenters;

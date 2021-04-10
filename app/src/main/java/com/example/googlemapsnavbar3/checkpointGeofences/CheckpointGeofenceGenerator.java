@@ -66,11 +66,6 @@ public class CheckpointGeofenceGenerator {
 
     }
 
-    public boolean isCreated()
-    {
-        return true;
-    }
-
     private PendingIntent getPendingIntent(){
         Intent intent = new Intent(context, checkpointBroadcastReciever.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1111, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -82,8 +77,12 @@ public class CheckpointGeofenceGenerator {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            // TODO: This method is called when the BroadcastReceiver is receiving
-            // an Intent broadcast.
+            // This method is called when the BroadcastReceiver is receiving
+
+            // 1. Reset the timer
+            // 2. Set the next checkpoint
+            // 3. Delete this geofence
+
 
         }
     }
