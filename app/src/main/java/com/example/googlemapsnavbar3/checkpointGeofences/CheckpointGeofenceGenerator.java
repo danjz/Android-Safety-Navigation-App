@@ -1,4 +1,4 @@
-package com.example.googlemapsnavbar3;
+package com.example.googlemapsnavbar3.checkpointGeofences;
 
 import android.Manifest;
 import android.app.PendingIntent;
@@ -11,6 +11,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
+import com.example.googlemapsnavbar3.GeofenceHelper;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
@@ -63,7 +64,20 @@ public class CheckpointGeofenceGenerator {
     }
 
     public void remove(){
+        geofencingClient.removeGeofences(getPendingIntent())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Checkpoint Arrival", "Geofence removed");
 
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("Checkpoint Arrival", "failed to remove geofence");
+                    }
+                });
     }
 
     private PendingIntent getPendingIntent(){
@@ -79,10 +93,12 @@ public class CheckpointGeofenceGenerator {
         public void onReceive(Context context, Intent intent) {
             // This method is called when the BroadcastReceiver is receiving
 
-            // 1. Reset the timer
-            // 2. Set the next checkpoint
-            // 3. Delete this geofence
-
+            //Get the timer handler
+            CheckpointTimerHandler timerHandler = CheckpointTimerHandler.getInstance();
+            //Cancel the old timer and start the new timer
+            timerHandler.nextCheckpoint();
+            //Delete the (now) old geofence
+            remove();
 
         }
     }
