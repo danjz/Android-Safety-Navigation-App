@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="testcheckbox"
+        android:title="Checkbox works?" />
+    <PreferenceScreen
+        android:key="dest_saved"
+        android:title="Saved Destinations"
+        android:summary="Edit and remove saved destinations">
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:key="map_settings"
+        android:title="Map Settings"
+        android:summary="Change the way the map is visualised">
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:key="appearance"
+        android:title="Appearance"
+        android:summary="Spruce up the app to your liking">
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:key="batteryusage"
+        android:title="Optimise Battery Usage"
+        android:summary="Adjust settings to improve battery life">
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:key="privandsec"
+        android:title="Privacy and Security"
+        android:summary="Adjust privacy and security settings">
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:key="helpandsupport"
+        android:title="Help and Support"
+        android:summary="About us, Q+A, Contact us">
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:key="terms_of_service"
+        android:title="Terms of Service"
+        android:summary="Conditions which you agree to by using our app">
+    </PreferenceScreen>
+
+
+</PreferenceScreen>

@@ -3,6 +3,7 @@ package com.example.googlemapsnavbar3;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceFragmentCompat;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,7 @@ import static android.widget.Toast.LENGTH_SHORT;
  * Use the {@link ThirdFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ThirdFragment extends Fragment implements View.OnClickListener {
+public class ThirdFragment extends PreferenceFragmentCompat {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,32 +58,12 @@ public class ThirdFragment extends Fragment implements View.OnClickListener {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-//        Button button1 = getView().findViewById(R.id.savedDestinationsButton);
-//        Button button2 = getView().findViewById(R.id.savedContactsButton);
-//        Button button3 = getView().findViewById(R.id.mapSettingsButton);
-//        Button button4 = getView().findViewById(R.id.themeSettingsButton);
-//        Button button5 = getView().findViewById(R.id.batterySavingSettingsButton);
-//        Button button6 = getView().findViewById(R.id.privAndSecButton);
-//        Button button7 = getView().findViewById(R.id.helpAndSupportButton);
-//        Button button8 = getView().findViewById(R.id.aboutUsButton);
-
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.savedDestinationsButton:
-               // Toast.makeText(ThirdFragment.class, "Button 1 clicked", LENGTH_SHORT).show();
-                break;
-        }
-    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_third, container, false);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.thirdfragmentsettings, rootKey);
     }
 }
 

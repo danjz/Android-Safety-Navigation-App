@@ -9,7 +9,58 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="First Fragment"
         android:textSize="25sp"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome Back,"
+        android:textSize="60px"
+        android:layout_marginTop="50px"
+        android:layout_marginLeft="50px"/>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50px"
+        android:layout_marginTop="250px"
+        android:text="Your Emergency Number:"
+        android:textSize="60px" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50px"
+        android:layout_marginTop="340px"
+        android:text="If both Local Police and Contacts are selected, police will be dialed first"
+        android:textSize="30px" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="350px"
+        android:layout_height="21dp"
+        android:layout_marginLeft="50px"
+        android:layout_marginTop="400px"
+        android:text="Local Police" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        android:layout_marginTop="480px"
+        android:layout_marginLeft="350px"/>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FirstName"
+        android:layout_marginTop="50px"
+        android:layout_marginLeft="490px"
+        android:textSize="60px"/>
 
 </FrameLayout>
