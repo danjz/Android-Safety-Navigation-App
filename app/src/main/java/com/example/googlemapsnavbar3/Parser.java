@@ -1,12 +1,18 @@
 package com.example.googlemapsnavbar3;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.googlemapsnavbar3.checkpointGeofences.CheckpointGeofenceGenerator;
+import com.example.googlemapsnavbar3.places.Place;
+import com.example.googlemapsnavbar3.places.PlaceList;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
@@ -23,6 +29,7 @@ public class Parser extends AsyncTask<Void, Void, String> {
     private TextView durationView;
     private String origin;
     private String destination;
+    private Context context;
 
     private GeofenceHelper geofenceHelper;
     private double lat;
@@ -31,19 +38,22 @@ public class Parser extends AsyncTask<Void, Void, String> {
     private PlaceList checkpoints;
     private PlaceList route;
 
-    public Parser(GoogleMap googleMap, TextView durationText, String origin, String destination, PlaceList checkpoints) {
+    public Parser(GoogleMap googleMap, TextView durationText, String origin, String destination, PlaceList checkpoints, Context context) {
         this.googleMap = googleMap;
         this.durationView = durationText;
         this.origin = origin;
         this.destination = destination;
         this.checkpoints = checkpoints;
+        this.context = context;
+
     }
 
-    public Parser(GoogleMap googleMap, TextView durationText, String origin, String destination) {
+    public Parser(GoogleMap googleMap, TextView durationText, String origin, String destination, Context context) {
         this.googleMap = googleMap;
         this.durationView = durationText;
         this.origin = origin;
         this.destination = destination;
+        this.context = context;
     }
 
     //doInBackground turns JSON string into JSON objects and array
@@ -51,6 +61,7 @@ public class Parser extends AsyncTask<Void, Void, String> {
     //encoded polyline string and returns it
     @Override
     protected String doInBackground(Void...arg0) {
+        Log.d("doInBackground", "doInBackground is running");
         //Create instance of httpHandler and call its getJSON() method
         HttpHandler httpHandler = new HttpHandler(origin,destination,checkpoints);
         //Get JSON string
@@ -95,16 +106,31 @@ public class Parser extends AsyncTask<Void, Void, String> {
                 Log.e("Json error", "Json parsing error: " + e.getMessage());
             }
         }
+        Log.d("Parser", "The HTTP Message is null");
         return null;
     }
 
     @Override
     protected void onPostExecute(String encodedPolyline) {
+        Log.d("onPostExecute", "onPostExecute is running");
         List<LatLng> decodedPath = PolyUtil.decode(encodedPolyline);
         this.route = new PlaceList(decodedPath);
         this.googleMap.addPolyline(new PolylineOptions().addAll(decodedPath));
 
+        int idNumber = 0;
+        for (Place place: checkpoints){
+            Log.d("onPostExecute", String.valueOf(place));
+            CheckpointGeofenceGenerator geofence = new CheckpointGeofenceGenerator(context, "checkpoint - " + idNumber, place.toLatLng(), 200);
+            geofence.create();
+            //Create new circle at destination coordinates
+            CircleOptions circleOptions = new CircleOptions()
+                    .center(place.toLatLng())
+                    .radius(200); // In meters
+            Circle circle = this.googleMap.addCircle(circleOptions);
+            idNumber++;
+        }
     }
+
 
     public double getLat() {
         return this.lat;

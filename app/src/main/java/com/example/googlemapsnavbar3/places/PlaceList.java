@@ -143,22 +143,4 @@ public class PlaceList implements Iterable<Place> {
         }
         return output;
     }
-
-    public PlaceList generateGeofenceCenters(){
-        PlaceList geoCenters = new PlaceList();
-
-        int numSplits = 5;
-        for(int i = 0; i < places.size() - 1; i++){
-
-            LatLng from = places.get(i).toLatLng();
-            LatLng to = places.get(i + 1).toLatLng();
-
-            for (int j = 0; j < numSplits; j++){
-                LatLng center = SphericalUtil.interpolate(from, to, 1/numSplits);
-                Place placeCenter = new Place(center.latitude, center.longitude);
-                geoCenters.add(placeCenter);
-            }
-        }
-        return geoCenters;
-    }
 }

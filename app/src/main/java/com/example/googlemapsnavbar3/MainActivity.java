@@ -9,13 +9,16 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 
+import com.example.googlemapsnavbar3.places.PlaceFileHandler;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -34,6 +37,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import org.xml.sax.SAXException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -70,12 +74,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void saveLocations(View view){
         PlaceFileHandler.savePlacesToFile("safePlaces.txt",this.getApplicationContext());
+        Context context = this.getApplicationContext();
+        File file = context.getFileStreamPath("safePlaces.txt");
+        if (file.exists()){
+            Log.d("saveLocations", "Location File exists");
+        }
+        else{
+            Log.d("saveLocations", "Location File doesn't exists");
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void loadLocations(View view) throws IOException, ParserConfigurationException, SAXException, ExecutionException, InterruptedException {
         PlaceFileHandler.loadPlacesFromFile("safePlaces.txt",this.getApplicationContext());
     }
-
-
 }
