@@ -3,12 +3,12 @@ Github repository for CM2305 Group Project
 
 Maps:
 
-- [ ] Calculating a route
-- [ ] Tracking the user
+- [X] Calculating a route
+- [X] Tracking the user
 - [ ] Creating a journey
 - [ ] Detecting when the user does not reach a checkpoint in time
 - [ ] Detecting when the user deviates off route
-- [ ] Detecting Fights/Assaults
+- [X] Detecting Fights/Assaults
 
 Backend:
 
@@ -20,7 +20,7 @@ UI:
 - [X] Show map
 - [ ] Show current location
 - [ ] Show route as a line
-- [ ] Show markers
+- [X] Show markers
 
 Other:
 - [X] Modify Battery Consumption
