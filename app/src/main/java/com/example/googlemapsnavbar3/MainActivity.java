@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "It's null lol", Toast.LENGTH_SHORT).show();
         }
         if(!TextUtils.isEmpty(phone)){
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+1234));
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+ phone));
 //Execution intention
             startActivity(intent);
         }else{
