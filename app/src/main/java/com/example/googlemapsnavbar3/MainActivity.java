@@ -15,6 +15,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         //bottom navigation menu code
 
+
         //Find and initialize BottomNavigationView and NavController
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         NavController navController = Navigation.findNavController(this,  R.id.fragment);
@@ -71,21 +74,28 @@ public class MainActivity extends AppCompatActivity {
         //navigation end
     }
 
-
     public void saveLocations(View view){
         PlaceFileHandler.savePlacesToFile("safePlaces.txt",this.getApplicationContext());
         Context context = this.getApplicationContext();
         File file = context.getFileStreamPath("safePlaces.txt");
         if (file.exists()){
-            Log.d("saveLocations", "Location File exists");
+            Log.d("MainAc - saveLocations", "Location File exists");
         }
         else{
-            Log.d("saveLocations", "Location File doesn't exists");
+            Log.d("MainAc - saveLocations", "Location File doesn't exists");
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void loadLocations(View view) throws IOException, ParserConfigurationException, SAXException, ExecutionException, InterruptedException {
         PlaceFileHandler.loadPlacesFromFile("safePlaces.txt",this.getApplicationContext());
+    }
+
+    public void storeInput(View view) {
+        EditText phoneNumber = (EditText)findViewById(R.id.phone_number);
+        TextView testing = (TextView)findViewById(R.id.textView5);
+        String text = phoneNumber.getText().toString();
+        Toast.makeText(this, "The phone number has been saved", Toast.LENGTH_SHORT).show();
+        testing.setText(text);
     }
 }
