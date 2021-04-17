@@ -16,6 +16,9 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,20 +28,27 @@ public class CheckpointGeofenceGenerator {
     private String geofence_ID;
     private LatLng latLng;
     private float radius;
+    private long time;
 
     private Context context;
     private Geofence geofence;
     private GeofencingClient geofencingClient;
     private GeofenceHelper geofenceHelper;
+    private GoogleMap googleMap;
+    private PendingIntent pendingIntent;
 
-    public CheckpointGeofenceGenerator(Context context, String ID, LatLng latLng, float radius) {
+    private Circle circle;
+
+    public CheckpointGeofenceGenerator(Context context, String ID, LatLng latLng, float radius, long time, GoogleMap googleMap) {
         this.context = context;
         this.geofencingClient = LocationServices.getGeofencingClient(context);
         this.geofenceHelper = new GeofenceHelper(context);
+        this.googleMap = googleMap;
 
         this.geofence_ID = ID;
         this.latLng = latLng;
         this.radius = radius;
+        this.time = time;
     }
 
     public void create() {
@@ -52,6 +62,13 @@ public class CheckpointGeofenceGenerator {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d("Geofence success", "Geofence" + geofence_ID + "created");
+                            //Create new circle at destination coordinates
+                            CircleOptions checkCircleOptions = new CircleOptions()
+                                    .center(latLng)
+                                    .radius(200); // In meters
+                            circle = googleMap.addCircle(checkCircleOptions);
+                            CheckpointTimerHandler timerHandler = CheckpointTimerHandler.getInstance();
+                            timerHandler.addCheckpoint(time);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -69,7 +86,7 @@ public class CheckpointGeofenceGenerator {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("Checkpoint Arrival", "Geofence removed");
-
+                        circle.remove();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -81,27 +98,17 @@ public class CheckpointGeofenceGenerator {
     }
 
     private PendingIntent getPendingIntent(){
-        Intent intent = new Intent(context, checkpointBroadcastReciever.class);
+        if (pendingIntent != null) {
+            return pendingIntent;
+        }
+        Intent intent = new Intent(context, CheckpointBroadcastReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1111, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         return pendingIntent;
     }
 
-    private class checkpointBroadcastReciever extends BroadcastReceiver {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // This method is called when the BroadcastReceiver is receiving
 
-            //Get the timer handler
-            CheckpointTimerHandler timerHandler = CheckpointTimerHandler.getInstance();
-            //Cancel the old timer and start the new timer
-            timerHandler.nextCheckpoint();
-            //Delete the (now) old geofence
-            remove();
-
-        }
-    }
 }
 
 

@@ -4,6 +4,7 @@ package com.example.googlemapsnavbar3.places;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -55,14 +56,6 @@ public final class PlaceFileHandler {
                 place = stringToPlace(line);
                 placeList.add(place);
                 line = reader.readLine();
-                /*
-                if(line == null){
-                    Log.i("reader", "null");
-                }
-                else{
-                    Log.i("reader", line);
-                }
-                 */
             }
         } catch (IOException e) {
             // Error occurred when opening raw file for reading.
@@ -163,6 +156,7 @@ public final class PlaceFileHandler {
                     //taken from https://developer.android.com/training/data-storage/app-specific#java
                     try (FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE)) {
                         fos.write(fileContents.getBytes());
+                        Log.d("SavePlaces - Writing", "Written Success");
                     }
 
                 } catch (ParserConfigurationException e) {

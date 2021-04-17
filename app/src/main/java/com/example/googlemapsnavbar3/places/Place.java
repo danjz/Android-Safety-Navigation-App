@@ -149,4 +149,19 @@ public class Place {
 
         return Math.sqrt(Math.pow(v3[0],2) + Math.pow(v3[1], 2));
     }
+
+    /**
+     * <p>Returns the amount of time to walk from one place to another</p>
+     * @param newPlace
+     * @return The amount of time it takes to walk from this place to newPlace.
+     */
+    public int timeToPlace(Place newPlace){
+        Double distance = this.distanceFromPlace(newPlace);
+        //in kilometers
+
+        //Average walking speed is 5 km/h but we'll assume 3.5 to be safe
+        int time = (int) Math.floor(distance/3.5);
+        time = time * 3600;
+        return time;
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.googlemapsnavbar3.checkpointGeofences;
 
 import android.os.CountDownTimer;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -38,11 +39,13 @@ public class CheckpointTimerHandler {
     public void nextCheckpoint(){
         CheckpointTimer oldTimer = checkpointTimerArrayList.get(pointer);
         oldTimer.cancel();
-        pointer++;
-        CheckpointTimer newTimer = checkpointTimerArrayList.get(pointer);
-        newTimer.start();
-    }
+        if (checkpointTimerArrayList.size() > pointer){
+            pointer++;
+            CheckpointTimer newTimer = checkpointTimerArrayList.get(pointer);
+            newTimer.start();
+        }
 
+    }
 
     private class CheckpointTimer{
         CountDownTimer timer;
@@ -55,7 +58,7 @@ public class CheckpointTimerHandler {
 
                 @Override
                 public void onFinish() {
-                    //Alert police
+                    Log.d("Checkpoint Timer", "Timer Finished/Removed");
                 }
             };
         }

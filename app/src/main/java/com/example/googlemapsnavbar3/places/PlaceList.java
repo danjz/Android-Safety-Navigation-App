@@ -15,7 +15,6 @@ import java.util.List;
 public class PlaceList implements Iterable<Place> {
 
     private ArrayList<Place> places;
-    private int pointer = 0;
 
     public PlaceList(){
         this.places = new ArrayList<>();
@@ -34,30 +33,8 @@ public class PlaceList implements Iterable<Place> {
         }
     }
 
-    public Place getCurrentCheckpoint(){
-        Place place = places.get(pointer);
-        return place;
-    }
-
-    /**
-     * Returns the time to the next checkpoint
-     * @return
-     */
-    public int timeToNextCheckpoint(){
-        Place current = places.get(pointer);
-        Place next = places.get(pointer + 1);
-
-        Double distance = current.distanceFromPlace(next);
-        //in kilometers
-
-        //Average walking speed is 5 km/h but we'll assume 3.5 to be safe
-        int time = (int) Math.floor(distance/3.5);
-        time = time * 3600;
-        return time;
-    }
-
-    public void goTonextCheckpoint(){
-        pointer++;
+    public Place get(int pointer){
+        return places.get(pointer);
     }
 
     public void add(Place location){
@@ -126,6 +103,14 @@ public class PlaceList implements Iterable<Place> {
                 return Double.compare(dist1, dist2);
             }
         });
+    }
+
+    /**
+     * <p>Returns the number of elements in the PlaceList</p>
+     * @return The number of elements in the PlaceList
+     */
+    public int length(){
+        return places.size();
     }
 
     /**
