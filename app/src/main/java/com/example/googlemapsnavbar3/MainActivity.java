@@ -3,13 +3,16 @@ package com.example.googlemapsnavbar3;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -95,9 +98,10 @@ public class MainActivity extends AppCompatActivity {
         testing.setText(text);
     }
     public void callPhone(View view){
-        //TODO add some code so that if permission is denied it is requested back.
-//obtain the entered phone number
         String phone = text;
+        if (checkContactPermission() == false){
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE},99);
+        }
         if (text == null){
             Toast.makeText(this, "It's null lol", Toast.LENGTH_SHORT).show();
         }
@@ -108,5 +112,10 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this, "Please input mobile phone number", Toast.LENGTH_LONG).show();
         }
+    }
+    private boolean checkContactPermission(){
+        String permission = Manifest.permission.CALL_PHONE;
+        int res = getApplicationContext().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
     }
 }
