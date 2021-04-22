@@ -57,15 +57,10 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-<<<<<<< HEAD
         <activity android:name=".MainActivity">
         </activity>
         <activity android:name=".SavedContacts">
         </activity>
-=======
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".SavedContacts"></activity>
->>>>>>> 64f5de646dc8d52805f9683af00da5758aedca63
         <activity android:name=".SavedDestinations">
         </activity>
         <activity android:name=".BatterySavingSettings">
@@ -80,14 +75,11 @@
         </activity>
         <activity android:name=".ThemeandAppearance">
         </activity>
-<<<<<<< HEAD
 
-=======
         <activity android:name=".FallAndFightDetection">
         </activity>
         <activity android:name=".Countdown">
         </activity>
->>>>>>> 64f5de646dc8d52805f9683af00da5758aedca63
     </application>
 
 </manifest>
