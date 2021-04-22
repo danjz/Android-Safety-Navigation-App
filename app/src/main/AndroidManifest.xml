@@ -8,7 +8,13 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        package="com.example.grouproject" />
     <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
@@ -31,9 +37,10 @@
             android:enabled="true"
             android:exported="true" />
         <receiver
-        android:name=".checkpointGeofences.CheckpointBroadcastReceiver"
-        android:enabled="true"
-        android:exported="true" />
+            android:name=".checkpointGeofences.CheckpointBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <activity android:name=".test_accelerometer"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -49,9 +56,9 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity">
+        </activity>
         <activity android:name=".SavedContacts">
-
         </activity>
         <activity android:name=".SavedDestinations">
         </activity>
@@ -67,6 +74,7 @@
         </activity>
         <activity android:name=".ThemeandAppearance">
         </activity>
+
     </application>
 
 </manifest>
