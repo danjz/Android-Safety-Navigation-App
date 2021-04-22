@@ -16,6 +16,7 @@
         android:name="android.permission.ACCESS_FINE_LOCATION"
         package="com.example.grouproject" />
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
 
     <application
         android:allowBackup="true"
@@ -56,10 +57,15 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
+<<<<<<< HEAD
         <activity android:name=".MainActivity">
         </activity>
         <activity android:name=".SavedContacts">
         </activity>
+=======
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".SavedContacts"></activity>
+>>>>>>> 64f5de646dc8d52805f9683af00da5758aedca63
         <activity android:name=".SavedDestinations">
         </activity>
         <activity android:name=".BatterySavingSettings">
@@ -74,7 +80,14 @@
         </activity>
         <activity android:name=".ThemeandAppearance">
         </activity>
+<<<<<<< HEAD
 
+=======
+        <activity android:name=".FallAndFightDetection">
+        </activity>
+        <activity android:name=".Countdown">
+        </activity>
+>>>>>>> 64f5de646dc8d52805f9683af00da5758aedca63
     </application>
 
 </manifest>

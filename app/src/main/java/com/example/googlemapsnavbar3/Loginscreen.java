@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,8 @@ public class Loginscreen extends AppCompatActivity {
     //create global firebase auth
     private FirebaseAuth mAuth;
 
+//    private Button temp;
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -39,6 +42,15 @@ public class Loginscreen extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
+
+//        temp = (Button)findViewById(R.id.temp);
+//        temp.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(Loginscreen.this,MainActivity.class);
+//                startActivity(intent);
+//            }
+//        });
     }
 
     @Override

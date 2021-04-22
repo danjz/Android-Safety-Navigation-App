@@ -32,11 +32,11 @@
         />
 
     <TextView
-        android:id="@+id/triAxial"
+        android:id="@+id/tv_max"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:text="tri-axial!"
+        android:text="tv_max!"
         />
 
     <TextView
