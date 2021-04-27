@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -232,7 +233,9 @@ public class Parser extends AsyncTask<Void, Void, String> {
             }
 
             public void onFinish() {
-                durationView.setText("YOU DIDNT MAKE IT >:(");
+                durationView.setText("Emergency contact has been called");
+
+                ((MainActivity)context).callPhone(new View(context));;
             }
         }.start();
 
