@@ -38,6 +38,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
@@ -53,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView testing;
     private String text;
+    public FirebaseFirestore mDB;
+    private StoreLocation StoreLocation;
+    private FirebaseAuth mAuth;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,15 +104,19 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "The phone number has been saved", Toast.LENGTH_SHORT).show();
         testing.setText(text);
     }
+
+    //call phone method that receives the MainActivity view
     public void callPhone(View view){
         String phone = text;
-        if (checkContactPermission() == false){
+        if (!checkContactPermission()){
+            //request for permission if denied
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE},99);
         }
         if (text == null){
-            Toast.makeText(this, "It's null lol", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Call permission denied", Toast.LENGTH_SHORT).show();
         }
         if(!TextUtils.isEmpty(phone)){
+            //call intent which uses the phone number variable.
             Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+ phone));
 //Execution intention
             startActivity(intent);
@@ -113,9 +124,24 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Please input mobile phone number", Toast.LENGTH_LONG).show();
         }
     }
+    //method to check permissions
     private boolean checkContactPermission(){
         String permission = Manifest.permission.CALL_PHONE;
         int res = getApplicationContext().checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
+    }
+
+    //store user's location in firebase
+    private void StoreLocation(){
+        if(StoreLocation != null){
+            DocumentReference locationRef = mDB.collection("UserLocations").document(FirebaseAuth.getInstance().getUid());
+        }
+    }
+    private void getUserDetails(){
+        if(StoreLocation == null){
+            StoreLocation = new StoreLocation();
+
+            DocumentReference userRef = mDB.collection("Users").document(FirebaseAuth.getInstance().getUid());
+        }
     }
 }

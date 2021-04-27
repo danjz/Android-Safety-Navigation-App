@@ -1,10 +1,12 @@
 package com.example.googlemapsnavbar3;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,55 +24,58 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Loginscreen extends AppCompatActivity {
 
-    //global google sign in client
+    //google sign in client
     private GoogleSignInClient mGoogleSignInClient;
-    //initialise int value
+    //create random int value
     private final static int RC_SIGN_IN = 1;
-    //create global firebase auth
+    //global firebase auth
     private FirebaseAuth mAuth;
+    //userID for storing in firestore
+    String userID;
+    //firestore database
+    private FirebaseFirestore mDB;
 
-//    private Button temp;
 
     @Override
     protected void onStart() {
         super.onStart();
+        //assign user from google account to local user var
         FirebaseUser user = mAuth.getCurrentUser();
         if(user != null){
+            //if user var isn't null, user has signed in, init MainActivity.
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
-
-//        temp = (Button)findViewById(R.id.temp);
-//        temp.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(Loginscreen.this,MainActivity.class);
-//                startActivity(intent);
-//            }
-//        });
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //display login screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_loginscreen);
 
+        //init firebaseauth and firestore
         mAuth = FirebaseAuth.getInstance();
+        mDB = FirebaseFirestore.getInstance();
 
-        //Google Sign In Code
+        //sends request to google to sign in
         createRequest();
 
-        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
-            }
-        });
+        //listening for sign in button clicks using lambdax
+        ImageView signIn = (ImageView) findViewById(R.id.sign_in_button);
+        signIn.setOnClickListener(v -> signIn());
     }
+
+    //google sign in request
     private void createRequest() {
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -81,10 +86,13 @@ public class Loginscreen extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
+    //Accessing GoogleSSO
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
+
+    //after user has signed in
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -103,6 +111,8 @@ public class Loginscreen extends AppCompatActivity {
             }
         }
     }
+
+    //linking the google account with user account in firebase
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
@@ -112,6 +122,11 @@ public class Loginscreen extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
+                            userID = mAuth.getCurrentUser().getUid();
+                            DocumentReference documentReference = mDB.collection("users").document(userID);
+                            Map<String,Object> userMap = new HashMap<>();
+                            userMap.put("userID", userID);
+                            documentReference.set(userMap);
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                         } else {

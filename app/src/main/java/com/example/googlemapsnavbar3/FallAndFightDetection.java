@@ -119,8 +119,8 @@ public class FallAndFightDetection extends AppCompatActivity implements SensorEv
                 temp.setTextColor(Color.RED);
 
                 //start to count down (20s)
-                Intent intent = new Intent(FallAndFightDetection.this,Countdown.class);
-                startActivity(intent);
+                //Intent intent = new Intent(FallAndFightDetection.this, Countdown.class);
+                //startActivity(intent);
             }
             else{
                 temp.setText("safe");
