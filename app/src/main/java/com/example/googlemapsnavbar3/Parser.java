@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
+import com.example.googlemapsnavbar3.detectOffCourse.GeofenceBuilder3;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
@@ -172,6 +173,17 @@ public class Parser extends AsyncTask<Void, Void, String> {
 
         //TODO: this is useless get rid?
         IntentFilter filter = new IntentFilter();
+
+        GeofenceBuilder3 generator3;
+        Place start;
+        Place loc;
+        int time;
+
+        for (int i = 1; i < offcourse.length(); i++) {
+
+            generator3 = new GeofenceBuilder3(context, i loc.toLatLng(), 200, time, googleMap);
+            generator3.addGeofence3();
+        }
     }
 
 

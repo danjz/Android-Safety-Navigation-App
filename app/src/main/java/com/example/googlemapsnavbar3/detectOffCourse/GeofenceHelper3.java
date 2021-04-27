@@ -28,7 +28,7 @@ public class GeofenceHelper3 extends ContextWrapper {
      * @param geofence the geofence to be monitored
      * @return GeofencingRequest object containing info on how the geofence will be monitored
      */
-    public GeofencingRequest getGeofencingRequest(Geofence geofence) {
+    public GeofencingRequest getGeofencingRequest3(Geofence geofence) {
         return new GeofencingRequest.Builder()
                 .addGeofence(geofence)
                 .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
@@ -44,7 +44,7 @@ public class GeofenceHelper3 extends ContextWrapper {
      * @param transitionTypes when the geofence should be triggered e.g TRANSITION_ENTER or _DWELL
      * @return the created geofence instance
      */
-    public Geofence getGeofence(String ID, LatLng latLng, float radius, int transitionTypes) {
+    public Geofence getGeofence3(int ID, LatLng latLng, float radius, int transitionTypes) {
         return new Geofence.Builder()
                 .setCircularRegion(latLng.latitude, latLng.longitude, radius)
                 .setRequestId(ID)

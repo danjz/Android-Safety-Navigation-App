@@ -12,8 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import com.example.googlemapsnavbar3.GeofenceBroadcastReceiver;
-import com.example.googlemapsnavbar3.GeofenceHelper;
+import com.example.googlemapsnavbar3.detectOffCourse.GeofenceBroadcastReceiver3;
+import com.example.googlemapsnavbar3.detectOffCourse.GeofenceHelper3;
 import com.example.googlemapsnavbar3.PlaceList;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
@@ -34,27 +34,36 @@ public class GeofenceBuilder3 {
      **/
     private Context context;
     private GeofencingClient geofencingClient3;
-    private GeofenceHelper geofenceHelper3;
+    private GeofenceHelper3 geofenceHelper3;
     BroadcastReceiver broadcastReceiver3;
-    private final float GEOFENCE_RADIUS = 200;
-    private String GEOFENCE_ID = "Test";
+    private final GoogleMap googleMap;
+    private float radius;
+    private int geofence_ID;
+    private long time;
     private LatLng latLng;
 
-    public GeofenceBuilder3(Context context, LatLng latLng) {
+    public GeofenceBuilder3(Context context, int ID, LatLng latLng, float radius, long time, GoogleMap googleMap) {
+        this.context = context;
+        this.googleMap = googleMap;
+
+        this.geofence_ID = ID;
+        this.latLng = latLng;
+        this.radius = radius;
+        this.time = time;
 
         this.context = context;
         this.latLng = latLng;
 
-        geofenceHelper3 = new GeofenceHelper(context);
+        geofenceHelper3 = new GeofenceHelper3(context);
         geofencingClient3 = LocationServices.getGeofencingClient(context);
-        broadcastReceiver3 = new GeofenceBroadcastReceiver();
+        broadcastReceiver3 = new GeofenceBroadcastReceiver3();
     }
 
     private void addGeofence3() {
         //build the geofence object
-        Geofence geofence = geofenceHelper3.getGeofence(GEOFENCE_ID, latLng, GEOFENCE_RADIUS,
+        Geofence geofence = geofenceHelper3.getGeofence3(geofence_ID, latLng, radius,
                 Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL);
-        GeofencingRequest geofencingRequest = geofenceHelper3.getGeofencingRequest(geofence);
+        GeofencingRequest geofencingRequest = geofenceHelper3.getGeofencingRequest3(geofence);
         PendingIntent pendingIntent = geofenceHelper3.getPendingIntent();
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
