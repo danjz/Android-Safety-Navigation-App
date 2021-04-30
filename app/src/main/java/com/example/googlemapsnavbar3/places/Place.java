@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -153,15 +154,15 @@ public class Place {
     /**
      * <p>Returns the amount of time to walk from one place to another</p>
      * @param newPlace
-     * @return The amount of time it takes to walk from this place to newPlace.
+     * @return The amount of time in seconds it takes to walk from this place to newPlace.
      */
     public int timeToPlace(Place newPlace){
         Double distance = this.distanceFromPlace(newPlace);
         //in kilometers
 
         //Average walking speed is 5 km/h but we'll assume 3.5 to be safe
-        int time = (int) Math.floor(distance/3.5);
-        time = time * 3600;
-        return time;
+        double time = distance/3.5;
+        int seconds = (int) Math.floor(time * 3600);
+        return seconds;
     }
 }

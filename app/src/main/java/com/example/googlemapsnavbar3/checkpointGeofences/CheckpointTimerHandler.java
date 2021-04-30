@@ -23,6 +23,10 @@ public class CheckpointTimerHandler {
         return instance;
     }
 
+    public void startFirstCheckpoint(){
+        checkpointTimerArrayList.get(0).start();
+    }
+
     /**
      * <p>Adds a timer to the list</p>
      * @param time The amount of time to reach the checkpoint in milliseconds
@@ -39,7 +43,7 @@ public class CheckpointTimerHandler {
     public void nextCheckpoint(){
         CheckpointTimer oldTimer = checkpointTimerArrayList.get(pointer);
         oldTimer.cancel();
-        if (checkpointTimerArrayList.size() > pointer){
+        if (checkpointTimerArrayList.size() > pointer + 1){
             pointer++;
             CheckpointTimer newTimer = checkpointTimerArrayList.get(pointer);
             newTimer.start();
@@ -49,16 +53,23 @@ public class CheckpointTimerHandler {
 
     private class CheckpointTimer{
         CountDownTimer timer;
+        private boolean canceled = false;
+
         public CheckpointTimer(long milli){
             this.timer = new CountDownTimer(milli, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
-
                 }
 
                 @Override
                 public void onFinish() {
-                    Log.d("Checkpoint Timer", "Timer Finished/Removed");
+                    if (canceled){
+                        Log.d("Checkpoint Timer", "Timer Removed");
+                    }
+                    else{
+                        Log.d("Checkpoint Timer", "Timer Removed");
+                        Log.d("Checkpoint Timer", "Contact Called");
+                    }
                 }
             };
         }
@@ -69,6 +80,7 @@ public class CheckpointTimerHandler {
 
         public void cancel(){
             timer.cancel();
+            canceled = true;
         }
 
     }

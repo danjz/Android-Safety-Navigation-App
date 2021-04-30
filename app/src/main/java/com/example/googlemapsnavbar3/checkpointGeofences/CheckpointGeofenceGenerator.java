@@ -6,6 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.CountDownTimer;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -49,6 +51,8 @@ public class CheckpointGeofenceGenerator {
         this.latLng = latLng;
         this.radius = radius;
         this.time = time;
+
+        
     }
 
     public void create() {
@@ -56,27 +60,17 @@ public class CheckpointGeofenceGenerator {
                 Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL);
         GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(geofence);
         PendingIntent pendingIntent = getPendingIntent();
+
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            geofencingClient.addGeofences(geofencingRequest, pendingIntent)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d("Geofence success", "Geofence" + geofence_ID + "created");
-                            //Create new circle at destination coordinates
-                            CircleOptions checkCircleOptions = new CircleOptions()
-                                    .center(latLng)
-                                    .radius(200); // In meters
-                            circle = googleMap.addCircle(checkCircleOptions);
-                            CheckpointTimerHandler timerHandler = CheckpointTimerHandler.getInstance();
-                            timerHandler.addCheckpoint(time);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d("Geofence error", geofenceHelper.getErrorString(e));
-                        }
-                    });
+            geofencingClient.addGeofences(geofencingRequest, pendingIntent);
+            Log.d("Geofence success", geofence_ID + "created");
+            //Create new circle at destination coordinates
+            CircleOptions checkCircleOptions = new CircleOptions()
+                    .center(latLng)
+                    .radius(200); // In meters
+            circle = googleMap.addCircle(checkCircleOptions);
+            CheckpointTimerHandler timerHandler = CheckpointTimerHandler.getInstance();
+            timerHandler.addCheckpoint(time*1000); //* 1000 to convert to milliseconds
         }
     }
 
@@ -102,12 +96,10 @@ public class CheckpointGeofenceGenerator {
             return pendingIntent;
         }
         Intent intent = new Intent(context, CheckpointBroadcastReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 1111, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getBroadcast(context, 1111, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         return pendingIntent;
     }
-
-
 
 }
 

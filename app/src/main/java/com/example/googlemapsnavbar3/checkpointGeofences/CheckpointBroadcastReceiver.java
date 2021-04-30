@@ -18,15 +18,13 @@ import java.util.List;
 
 public class CheckpointBroadcastReceiver extends BroadcastReceiver {
 
-    private CheckpointGeofenceGenerator generator;
-
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d("Checkpoint Receiver", "arrived at checkpoint");
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         List<Geofence> geofenceList = geofencingEvent.getTriggeringGeofences();
 
         // This method is called when the BroadcastReceiver is receiving
-        Log.d("Checkpoint Receiver", "arrived at checkpoint");
         //Get the timer handler
         CheckpointTimerHandler timerHandler = CheckpointTimerHandler.getInstance();
         //Cancel the old timer and start the new timer

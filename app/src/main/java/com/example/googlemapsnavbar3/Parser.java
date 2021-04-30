@@ -162,8 +162,6 @@ public class Parser extends AsyncTask<Void, Void, String> {
                 this.startLat = startLocation.getDouble("lat");
                 this.startLng = startLocation.getDouble("lng");
 
-
-
                 return encodedPolyline;
 
             } catch (final JSONException e) {
@@ -209,13 +207,16 @@ public class Parser extends AsyncTask<Void, Void, String> {
         CheckpointGeofenceGenerator generator;
 
         // Creating the first checkpoint
-        if (checkpoints.length() == 1) {
+        if (checkpoints.length() > 0) {
             start = new Place(startLat, startLng);
             loc = checkpoints.get(0);
             time = start.timeToPlace(loc);
+            Log.d("Parser", "Time:" + time);
             generator = new CheckpointGeofenceGenerator(context,
                     "Geofence - 0", loc.toLatLng(), 200, time, googleMap);
             generator.create();
+            CheckpointTimerHandler timerHandler = CheckpointTimerHandler.getInstance();
+            timerHandler.startFirstCheckpoint();
         }
 
         // Creating the rest of the checkpoints
@@ -225,7 +226,7 @@ public class Parser extends AsyncTask<Void, Void, String> {
                 loc = checkpoints.get(i);
                 time = start.timeToPlace(loc);
                 generator = new CheckpointGeofenceGenerator(context,
-                        "Geofence - 0", loc.toLatLng(), 200, time, googleMap);
+                        "Geofence - " + i, loc.toLatLng(), 200, time, googleMap);
                 generator.create();
             }
         }
