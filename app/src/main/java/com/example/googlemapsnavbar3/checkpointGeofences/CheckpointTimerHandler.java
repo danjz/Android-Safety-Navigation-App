@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+
 public class CheckpointTimerHandler {
 
     private static CheckpointTimerHandler instance = null;
@@ -16,6 +17,12 @@ public class CheckpointTimerHandler {
         this.pointer = 0;
     }
 
+    /**
+     * <p>Used the singleton design pattern</p>
+     * <p>If an instance of this class already exists, then return it.</p>
+     * <p>If an instance of this class doesn't exists, then make a new one and return it.</p>
+     * @return An instance of CheckpointTimerHandler
+     */
     public static CheckpointTimerHandler getInstance(){
        if (instance == null){
            instance = new CheckpointTimerHandler();
@@ -23,6 +30,9 @@ public class CheckpointTimerHandler {
         return instance;
     }
 
+    /**
+     * Starts the countdown of the first timer.
+     */
     public void startFirstCheckpoint(){
         checkpointTimerArrayList.get(0).start();
     }
@@ -55,6 +65,13 @@ public class CheckpointTimerHandler {
         CountDownTimer timer;
         private boolean canceled = false;
 
+        /**
+         * <p>Constructer for a timer.</p>
+         * <p>Has 2 finish states: Cancelled, Not Cancelled</p>
+         * <p>If the timer was cancelled the alarm isn't sounded.</p>
+         * <p>If the timer wasn't cancelled the alarm is sounded.</p>
+          * @param milli The length of the countdown in milliseconds.
+         */
         public CheckpointTimer(long milli){
             this.timer = new CountDownTimer(milli, 1000) {
                 @Override
@@ -74,10 +91,16 @@ public class CheckpointTimerHandler {
             };
         }
 
+        /**
+         * <p>Begin the countdown of the timer</p>
+         */
         public void start(){
            timer.start();
         }
 
+        /**
+         * <p>Cancel the timer.</p>
+         */
         public void cancel(){
             timer.cancel();
             canceled = true;

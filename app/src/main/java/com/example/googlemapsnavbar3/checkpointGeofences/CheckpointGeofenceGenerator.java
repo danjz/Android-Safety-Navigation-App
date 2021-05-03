@@ -51,10 +51,11 @@ public class CheckpointGeofenceGenerator {
         this.latLng = latLng;
         this.radius = radius;
         this.time = time;
-
-        
     }
 
+    /**
+     *<p>Instantiates the geofence. It also draws a black circle where the geofence is.</p>
+     */
     public void create() {
         geofence = geofenceHelper.getGeofence(geofence_ID, latLng, radius,
                 Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL);
@@ -74,23 +75,10 @@ public class CheckpointGeofenceGenerator {
         }
     }
 
-    public void remove(){
-        geofencingClient.removeGeofences(getPendingIntent())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Checkpoint Arrival", "Geofence removed");
-                        circle.remove();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("Checkpoint Arrival", "failed to remove geofence");
-                    }
-                });
-    }
-
+    /**
+     * <p>Returns the pending intent. If the pending intent already exists, then it returns that instance. Otherwise, it returns a new instance.</p>
+     * @return The pending intent.
+     */
     private PendingIntent getPendingIntent(){
         if (pendingIntent != null) {
             return pendingIntent;

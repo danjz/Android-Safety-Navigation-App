@@ -18,6 +18,12 @@ import java.util.List;
 
 public class CheckpointBroadcastReceiver extends BroadcastReceiver {
 
+    /**
+     * <p>Triggers when a the user arrives checkpoint Geofence </p> <p>It cancels the old timer, and starts the next timer.</p>
+     * <p>It also deletes the old geofence.</p>
+     * @param context
+     * @param intent
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("Checkpoint Receiver", "arrived at checkpoint");
