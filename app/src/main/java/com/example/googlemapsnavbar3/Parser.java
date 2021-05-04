@@ -34,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Parser extends AsyncTask<Void, Void, String> {
 
@@ -229,7 +230,11 @@ public class Parser extends AsyncTask<Void, Void, String> {
     private void startTimer(int millis) {
         countDownTimer = new CountDownTimer(millis, 1000) {
             public void onTick(long millisUntilFinished) {
-                durationView.setText(String.valueOf(millisUntilFinished/1000));
+
+                durationView.setText(String.format("%d:%d",
+                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished),
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
             }
 
             public void onFinish() {

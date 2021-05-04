@@ -89,9 +89,15 @@ public class MapsFragment extends Fragment {
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
                 public void onClick(View v) {
+                    String msg = "You just started a new safe journey. Please stick to the safe route " +
+                            "displayed on the map.The timer shows your expected arrival time, " +
+                            "if you fail to reach your destination within the time limit " +
+                            "or if any suspicious activity is detected, your emergency contacts will " +
+                            "be alerted. Good luck.";
+                    createAlertDialog("New Journey Started", msg);
+
                     updateCurrentLocation();
                     getBackgroundPermission();
-                    Log.d("HALLO ", "onClick: ");
 
                     String startLocation = current_latLng.latitude + "," + current_latLng.longitude;
                     String destination = (String) destinationEditText.getText().toString();
@@ -152,6 +158,8 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+
         return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
@@ -164,6 +172,13 @@ public class MapsFragment extends Fragment {
             mapFragment.getMapAsync(callback);
         }
 
+        String msg = "Welcome to the navigation panel!\n\n" +
+                "Here you will be able to track the progress of your journey home. This panel can " +
+                "generate a safe route home and track your movements to ensure your well-being along " +
+                "the way. The button on the top right can be used to display your current location. " +
+                "In the top left text box you can type in your destination and press the " +
+                "search button to activate the personal security navigation system. Stay safe!";
+        this.createAlertDialog("Navigation Panel", msg);
     }
 
     /**
@@ -246,6 +261,32 @@ public class MapsFragment extends Fragment {
         }
     }
 
+    /**
+     * Creates an 'ok' dialog alert box with the desired title and msg
+     *
+     * @param title the title of the dialog box
+     * @param msg the message of the dialog box
+     */
+    private void createAlertDialog(String title, String msg) {
+        // 1. Instantiate an <code><a href="/reference/android/app/AlertDialog.Builder.html">AlertDialog.Builder</a></code> with its constructor
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        // Add the buttons
+        builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+            }
+        });
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage(msg)
+                .setTitle(title);
+
+        // 3. Get the <code><a href="/reference/android/app/AlertDialog.html">AlertDialog</a></code> from <code><a href="/reference/android/app/AlertDialog.Builder.html#create()">create()</a></code>
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
 
 
     /**
@@ -259,4 +300,6 @@ public class MapsFragment extends Fragment {
             parser.stopTimer();
         }
     };
+
 }
+
