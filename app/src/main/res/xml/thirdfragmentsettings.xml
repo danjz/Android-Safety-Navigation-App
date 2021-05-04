@@ -46,8 +46,18 @@
         android:key="terms_of_service"
         android:title="Terms of Service"
         android:summary="Conditions which you agree to by using our app">
-        <intent android:targetPackage="com.example.googlemapsnavbar3"
-                android:targetClass="com.example.googlemapsnavbar3.TermsOfService"/>
+        <intent
+            android:targetClass="com.example.googlemapsnavbar3.TermsOfService"
+            android:targetPackage="com.example.googlemapsnavbar3" />
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:key="log_out"
+        android:summary="Click here to log out of the app"
+        android:title="Log Out">
+        <intent android:targetClass="com.example.googlemapsnavbar3.LogOut"
+                android:targetPackage="com.example.googlemapsnavbar3" />
     </PreferenceScreen>
 
 

@@ -11,7 +11,9 @@ import androidx.navigation.ui.NavigationUI;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -101,8 +103,8 @@ public class MainActivity extends AppCompatActivity {
         EditText phoneNumber = (EditText)findViewById(R.id.phone_number);
         TextView testing = (TextView)findViewById(R.id.textView5);
         text = phoneNumber.getText().toString();
+        setNumber(this, text);
         Toast.makeText(this, "The phone number has been saved", Toast.LENGTH_SHORT).show();
-        testing.setText(text);
     }
 
     //call phone method that receives the MainActivity view
@@ -115,14 +117,9 @@ public class MainActivity extends AppCompatActivity {
         if (text == null){
             Toast.makeText(this, "Call permission denied", Toast.LENGTH_SHORT).show();
         }
-        if(!TextUtils.isEmpty(phone)){
-            //call intent which uses the phone number variable.
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+ phone));
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+ getNumber(this)));
 //Execution intention
-            startActivity(intent);
-        }else{
-            Toast.makeText(this, "Please input mobile phone number", Toast.LENGTH_LONG).show();
-        }
+        startActivity(intent);
     }
     //method to check permissions
     private boolean checkContactPermission(){
@@ -143,5 +140,17 @@ public class MainActivity extends AppCompatActivity {
 
             DocumentReference userRef = mDB.collection("Users").document(FirebaseAuth.getInstance().getUid());
         }
+    }
+    //Method to set global emergency phone number variable
+    public static void setNumber(Context context, String number){
+        SharedPreferences prefs = context.getSharedPreferences("com.example.googlemapsnavbar3",0);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("number", number);
+        editor.commit();
+    }
+    //Method to retrieve phone number variable
+    public static String getNumber(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("com.example.googlemapsnavbar3", 0);
+        return prefs.getString("number", "");
     }
 }
