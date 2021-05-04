@@ -15,10 +15,10 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome Back,"
-        android:textSize="60px"
+        android:layout_marginLeft="50px"
         android:layout_marginTop="50px"
-        android:layout_marginLeft="50px"/>
+        android:text="Welcome Back,"
+        android:textSize="60px" />
 
     <TextView
         android:id="@+id/name"
@@ -88,4 +88,15 @@
         android:layout_marginTop="500dp"
         android:text="TextView" />
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download and save safe locations"
+        android:layout_marginTop="780px"
+        android:layout_marginLeft="150px"
+        android:layout_marginRight="150px"
+        android:onClick="saveLocations"
+        />
+    />
 </FrameLayout>

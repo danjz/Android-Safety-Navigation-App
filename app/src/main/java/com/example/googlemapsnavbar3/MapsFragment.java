@@ -27,6 +27,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.googlemapsnavbar3.places.Place;
+import com.example.googlemapsnavbar3.places.PlaceFileHandler;
+import com.example.googlemapsnavbar3.places.PlaceList;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
@@ -53,8 +56,9 @@ public class MapsFragment extends Fragment {
     private FusedLocationProviderClient fusedLocationClient;
     private Parser parser;
 
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
+    private PlaceList routeList;
 
+    private OnMapReadyCallback callback = new OnMapReadyCallback() {
         /**
          * Manipulates the map once available.
          * This callback is triggered when the map is ready to be used.
@@ -82,7 +86,6 @@ public class MapsFragment extends Fragment {
             updateCurrentLocation();
             enableUserLocation();
 
-
             //Add search button functionality
             Button searchButton = getView().getRootView().findViewById(R.id.buttonSearch);
             searchButton.setOnClickListener(new View.OnClickListener() {
@@ -106,17 +109,25 @@ public class MapsFragment extends Fragment {
                     PlaceList checkpoints = null;
 
                     try {
-                        File file = getContext().getFileStreamPath("safePlaces.txt");
+                        //Loads file
+                        Log.d("onMapReady - OnClick", "Try is running");
+                        Context context = getContext();
+                        File file = context.getFileStreamPath("safePlaces.txt");
                         if (file.exists()){
+                            //Sort the checkpoints by distance from the route
+                            //Then get the top n closest checkpoints
+                            int n = 1;
                             PlaceList places = PlaceFileHandler.loadPlacesFromFile("safePlaces.txt", getContext());
                             Place loc1 = Place.stringToPlace(destination, getContext());
-                            Place loc2 = Place.stringToPlace("Cardiff+Castle", getContext());
+                            Place loc2 = new Place(current_latLng.latitude,current_latLng.longitude);
                             places.sortByDistanceFromVector(loc1,loc2);
-                            checkpoints =  places.getUpToNthLocation(3);
+                            checkpoints = places.getUpToNthLocation(n);
                             fetched = true;
+
+                            Log.d("MapsFragment - onClick","File exists");
                         }
                         else{
-                            PlaceFileHandler.savePlacesToFile("safePlaces.txt", getContext());
+                            Log.d("MapsFragment - onClick","File doesn't exists");
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -237,7 +248,6 @@ public class MapsFragment extends Fragment {
      * Updates current location on map, kinda only works on initial start up
      */
     private void updateCurrentLocation() {
-
         if(checkSinglePermission(Manifest.permission.ACCESS_FINE_LOCATION)) {
             fusedLocationClient.getLastLocation()
                     .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {

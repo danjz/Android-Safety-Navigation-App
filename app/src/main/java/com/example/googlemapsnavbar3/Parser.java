@@ -1,5 +1,6 @@
 package com.example.googlemapsnavbar3;
 
+import android.content.Context;
 import android.Manifest;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -13,6 +14,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.googlemapsnavbar3.checkpointGeofences.CheckpointGeofenceGenerator;
+import com.example.googlemapsnavbar3.checkpointGeofences.CheckpointTimerHandler;
+import com.example.googlemapsnavbar3.places.Place;
+import com.example.googlemapsnavbar3.places.PlaceList;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
@@ -57,6 +62,10 @@ public class Parser extends AsyncTask<Void, Void, String> {
 
     
     private PlaceList checkpoints;
+    private PlaceList route;
+    private double startLat;
+    private double startLng;
+
 
     /**
      * Constructor used to initialize class variables
@@ -75,6 +84,21 @@ public class Parser extends AsyncTask<Void, Void, String> {
         this.destination = destination;
         this.context = context;
         this.checkpoints = checkpoints;
+        this.context = context;
+        this.durationValue = 0;
+
+        geofenceHelper = new GeofenceHelper(context);
+        geofencingClient = LocationServices.getGeofencingClient(context);
+        broadcastReceiver = new GeofenceBroadcastReceiver();
+
+    }
+
+    public Parser(GoogleMap googleMap, TextView durationText, String origin, String destination, Context context) {
+        this.googleMap = googleMap;
+        this.durationView = durationText;
+        this.origin = origin;
+        this.destination = destination;
+        this.context = context;
         this.durationValue = 0;
 
         geofenceHelper = new GeofenceHelper(context);
@@ -90,6 +114,7 @@ public class Parser extends AsyncTask<Void, Void, String> {
      */
     @Override
     protected String doInBackground(Void...arg0) {
+        Log.d("doInBackground", "doInBackground is running");
         //Create instance of httpHandler and call its getJSON() method
         HttpHandler httpHandler = new HttpHandler(origin,destination,checkpoints);
         //Get JSON string
@@ -132,9 +157,12 @@ public class Parser extends AsyncTask<Void, Void, String> {
                 JSONObject endLocation  = legsArr.getJSONObject(legsArr.length() - 1).getJSONObject("end_location");
                 this.lat = endLocation.getDouble("lat");
                 this.lng = endLocation.getDouble("lng");
-                //Log.d("lat log", String.valueOf(lat));
-                // Log.d("lng log", String.valueOf(lng));
+                Log.d("lat log", String.valueOf(lat));
+                Log.d("lng log", String.valueOf(lng));
 
+                JSONObject startLocation  = legsArr.getJSONObject(0).getJSONObject("start_location");
+                this.startLat = startLocation.getDouble("lat");
+                this.startLng = startLocation.getDouble("lng");
 
                 return encodedPolyline;
 
@@ -142,20 +170,20 @@ public class Parser extends AsyncTask<Void, Void, String> {
                 Log.e("Json error", "Json parsing error: " + e.getMessage());
             }
         }
+        Log.d("Parser", "The HTTP Message is null");
         return null;
     }
 
     /**
      * Called after background task is done, draws polyline on map and starts arrival timer
-     *
      * @param encodedPolyline takes in the encoded polyline string from finished doInBackground()
      *                        method
      */
     @Override
     protected void onPostExecute(String encodedPolyline) {
-
         //draw route polyline on map
         List<LatLng> decodedPath = PolyUtil.decode(encodedPolyline);
+        this.route = new PlaceList(decodedPath);
         this.googleMap.addPolyline(new PolylineOptions().addAll(decodedPath));
 
         //create geofence at destination
@@ -174,8 +202,45 @@ public class Parser extends AsyncTask<Void, Void, String> {
 
         //TODO: this is useless get rid?
         IntentFilter filter = new IntentFilter();
+
+        Place start;
+        Place loc;
+        int time;
+        CheckpointGeofenceGenerator generator;
+
+        // Creating the first checkpoint
+        if (checkpoints.length() > 0) {
+            start = new Place(startLat, startLng);
+            loc = checkpoints.get(0);
+            time = start.timeToPlace(loc);
+            Log.d("Parser", "Time:" + time);
+            generator = new CheckpointGeofenceGenerator(context,
+                    "Geofence - 0", loc.toLatLng(), 200, time, googleMap);
+            generator.create();
+            CheckpointTimerHandler timerHandler = CheckpointTimerHandler.getInstance();
+            timerHandler.startFirstCheckpoint();
+        }
+
+        // Creating the rest of the checkpoints
+        if (checkpoints.length() > 1) {
+            for (int i = 1; i < checkpoints.length(); i++) {
+                start = checkpoints.get(i - 1);
+                loc = checkpoints.get(i);
+                time = start.timeToPlace(loc);
+                generator = new CheckpointGeofenceGenerator(context,
+                        "Geofence - " + i, loc.toLatLng(), 200, time, googleMap);
+                generator.create();
+            }
+        }
     }
 
+    public double getLat() {
+        return this.lat;
+    }
+
+    public PlaceList getRoute(){
+        return this.route;
+    }
 
     /**
      * Returns the lat and lng of destination
@@ -253,6 +318,4 @@ public class Parser extends AsyncTask<Void, Void, String> {
     public void stopTimer() {
         countDownTimer.cancel();
     }
-
-
 }

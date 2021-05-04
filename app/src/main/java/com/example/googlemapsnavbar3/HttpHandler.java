@@ -2,6 +2,8 @@ package com.example.googlemapsnavbar3;
 
 import android.util.Log;
 
+import com.example.googlemapsnavbar3.places.PlaceList;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;

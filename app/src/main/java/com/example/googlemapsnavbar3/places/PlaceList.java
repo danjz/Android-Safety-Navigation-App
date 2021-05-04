@@ -1,13 +1,18 @@
-package com.example.googlemapsnavbar3;
+package com.example.googlemapsnavbar3.places;
 
-import android.location.Location;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
-public class PlaceList {
+public class PlaceList implements Iterable<Place> {
 
     private ArrayList<Place> places;
 
@@ -19,8 +24,31 @@ public class PlaceList {
         this.places = locations;
     }
 
+    public PlaceList(List<LatLng> latLngList){
+        this.places = new ArrayList<>();
+        for (LatLng latLng: latLngList){
+            double latitude = latLng.latitude;
+            double longitude = latLng.longitude;
+            this.places.add(new Place(latitude, longitude));
+        }
+    }
+
+    public Place get(int pointer){
+        return places.get(pointer);
+    }
+
     public void add(Place location){
         places.add(location);
+    }
+
+    /**
+     * Returns an iterator over elements of type place.
+     * @return an Iterator.
+     */
+    @NonNull
+    @Override
+    public Iterator<Place> iterator() {
+        return places.iterator();
     }
 
     public ArrayList<Place> getLocations(){
@@ -75,6 +103,14 @@ public class PlaceList {
                 return Double.compare(dist1, dist2);
             }
         });
+    }
+
+    /**
+     * <p>Returns the number of elements in the PlaceList</p>
+     * @return The number of elements in the PlaceList
+     */
+    public int length(){
+        return places.size();
     }
 
     /**
