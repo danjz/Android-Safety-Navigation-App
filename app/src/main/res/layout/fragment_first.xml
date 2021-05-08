@@ -53,7 +53,8 @@
         android:layout_height="21dp"
         android:layout_marginLeft="50px"
         android:layout_marginTop="400px"
-        android:text="Local Police"/>
+        android:text="Local Police"
+        android:onClick="police"/>
 
     <EditText
         android:id="@+id/phone_number"
@@ -98,5 +99,4 @@
         android:layout_marginRight="150px"
         android:onClick="saveLocations"
         />
-    />
 </FrameLayout>

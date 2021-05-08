@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private String text;
     public FirebaseFirestore mDB;
     private StoreLocation StoreLocation;
-    private FirebaseAuth mAuth;
+    public FirebaseAuth mAuth;
     String userID;
 
     @Override
@@ -121,11 +121,10 @@ public class MainActivity extends AppCompatActivity {
     public void callPhone(View view){
         String phone = text;
         if (!checkContactPermission()){
-            //request for permission if denied
+            //request for permission if not asked before
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE},99);
         }
         if (text == null){
-            Toast.makeText(this, "Call permission denied", Toast.LENGTH_SHORT).show();
         }
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+ getNumber(this)));
 //Execution intention
@@ -162,5 +161,12 @@ public class MainActivity extends AppCompatActivity {
     public static String getNumber(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("com.example.googlemapsnavbar3", 0);
         return prefs.getString("number", "");
+    }
+
+    public void police(View view) {
+        text = "999";
+    }
+    public void LogOut(View view) {
+        mAuth.getInstance().signOut();
     }
 }
