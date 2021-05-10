@@ -49,6 +49,7 @@ public class Loginscreen extends AppCompatActivity {
         super.onStart();
         //assign user from google account to local user var
         FirebaseUser user = mAuth.getCurrentUser();
+        mDB.clearPersistence();
         if(user != null){
             //if user var isn't null, user has signed in, init MainActivity.
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -131,6 +132,7 @@ public class Loginscreen extends AppCompatActivity {
                             startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
+                            mAuth.signOut();
                             Toast.makeText(Loginscreen.this, "Sorry you've been banned from the app", Toast.LENGTH_SHORT).show();
                         }
 

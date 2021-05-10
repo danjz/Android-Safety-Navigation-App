@@ -82,21 +82,12 @@
         android:onClick="callPhone"
         android:text="Call Contact" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="500dp"
-        android:text="TextView" />
-
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="Download and save safe locations"
-        android:layout_marginTop="780px"
-        android:layout_marginLeft="150px"
-        android:layout_marginRight="150px"
-        android:onClick="saveLocations"
-        />
+        android:layout_marginTop="480px"
+        android:onClick="saveLocations" />
 </FrameLayout>
