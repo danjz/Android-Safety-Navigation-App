@@ -12,15 +12,16 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.content.Context;
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,26 +29,21 @@ import android.widget.Toast;
 
 
 import com.example.googlemapsnavbar3.places.PlaceFileHandler;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
+import com.firebase.ui.auth.data.model.User;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
-import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -62,10 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView testing;
     private String text;
-    public FirebaseFirestore mDB;
-    private StoreLocation StoreLocation;
+    public FirebaseFirestore mDB = FirebaseFirestore.getInstance();
+    private UserLocation mUserLocation;
     public FirebaseAuth mAuth;
-    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
         //navigation end
+
+        if(!checkContactPermission()){
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE},99);
+        }
     }
 
     public void saveLocations(View view){
@@ -127,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         if (text == null){
         }
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+ getNumber(this)));
+        getUserDetails();
 //Execution intention
         startActivity(intent);
     }
@@ -137,19 +137,6 @@ public class MainActivity extends AppCompatActivity {
         return (res == PackageManager.PERMISSION_GRANTED);
     }
 
-    //store user's location in firebase
-    private void StoreLocation(){
-        if(StoreLocation != null){
-            DocumentReference locationRef = mDB.collection("UserLocations").document(FirebaseAuth.getInstance().getUid());
-        }
-    }
-    private void getUserDetails(){
-        if(StoreLocation == null){
-            StoreLocation = new StoreLocation();
-
-            DocumentReference userRef = mDB.collection("Users").document(FirebaseAuth.getInstance().getUid());
-        }
-    }
     //Method to set global emergency phone number variable
     public static void setNumber(Context context, String number){
         SharedPreferences prefs = context.getSharedPreferences("com.example.googlemapsnavbar3",0);
@@ -168,5 +155,34 @@ public class MainActivity extends AppCompatActivity {
     }
     public void LogOut(View view) {
         mAuth.getInstance().signOut();
+    }
+
+    public void getUserDetails(){
+        if(mUserLocation == null) {
+            mUserLocation = new UserLocation();
+        }
+        DocumentReference userRef = mDB.collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid());
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        @Override
+        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            if(task.isSuccessful()){
+                User user = task.getResult().toObject(User.class);
+                mUserLocation.setUser(user);
+                mUserLocation.setmUserLocation(null);
+                getLastKnownLocation();
+                    }
+                }
+            });
+    }
+    public void saveUserLocation() {
+        DocumentReference locationRef = mDB.collection("Users").document(FirebaseAuth.getInstance().getUid());
+        locationRef.set(mUserLocation);
+    }
+
+    public void getLastKnownLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mUserLocation.setTimestamp(null);
     }
 }

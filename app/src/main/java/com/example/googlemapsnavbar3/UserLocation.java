@@ -1,29 +1,39 @@
 package com.example.googlemapsnavbar3;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.firebase.ui.auth.data.model.User;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.ServerTimestamp;
 
-public class StoreLocation extends AppCompatActivity {
+import java.util.Date;
+
+public class UserLocation {
     private GeoPoint mUserLocation;
-    public FirebaseFirestore mDB;
-    private @ServerTimestamp String timestmap;
+    private @ServerTimestamp Date timestamp;
     private User user;
 
-    public StoreLocation(GeoPoint mUserLocation, String timestmap, User user) {
+    public UserLocation(GeoPoint mUserLocation, Date timestamp, User user) {
         this.mUserLocation = mUserLocation;
-        this.timestmap = timestmap;
+        this.timestamp = timestamp;
         this.user = user;
     }
-    public StoreLocation() {
+
+    public UserLocation() {
 
     }
 
@@ -31,12 +41,8 @@ public class StoreLocation extends AppCompatActivity {
         return mUserLocation;
     }
 
-    public FirebaseFirestore getmDB() {
-        return mDB;
-    }
-
-    public String getTimestmap() {
-        return timestmap;
+    public Date getTimestamp() {
+        return timestamp;
     }
 
     public User getUser() {
@@ -47,25 +53,11 @@ public class StoreLocation extends AppCompatActivity {
         this.mUserLocation = mUserLocation;
     }
 
-    public void setmDB(FirebaseFirestore mDB) {
-        this.mDB = mDB;
-    }
-
-    public void setTimestmap(String timestmap) {
-        this.timestmap = timestmap;
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
     public void setUser(User user) {
         this.user = user;
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_loginscreen);
-
-        mDB = FirebaseFirestore.getInstance();
-    }
-
 }
