@@ -179,18 +179,20 @@ public class Parser extends AsyncTask<Void, Void, String> {
         ArrayList<LatLng> geoPoints = new ArrayList<>();
 
         GeofenceBuilder3 generator3;
-        Place start;
-        Place loc;
-        int time;
         int i = 0;
         int j;
 
         while (i < allPoints.size()) {
             for (j = 0; j <= 4; j++) {
                 geoPoints.set(j,allPoints.get(i));
-                generator3 = new GeofenceBuilder3(context, i, geoPoints.get(j), 200, 60, googleMap);
+                generator3 = new GeofenceBuilder3(context, i, geoPoints.get(j), 200, 90, googleMap);
                 generator3.addGeofence3();
                 i++;
+            }
+            try {
+                Thread.sleep(60000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
             i++;
             j = 0;
