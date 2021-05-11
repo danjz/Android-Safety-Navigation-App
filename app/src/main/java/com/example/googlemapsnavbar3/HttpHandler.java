@@ -42,7 +42,7 @@ public class HttpHandler {
         String ori = "origin=" + this.origin;
         String dest = "&destination=" + this.destination;
         String checks = places.toApiString();
-        String key = "&key=API_KEY_HERE";
+        String key = "AIzaSyAdyk3GTqps6e2APdTjsS1CDe8kjcBbn1k";
         String mode = "&mode=walking";
         urlString = urlString + ori + dest + checks + mode + key;
 

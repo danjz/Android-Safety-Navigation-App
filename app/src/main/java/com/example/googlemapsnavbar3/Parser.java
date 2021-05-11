@@ -33,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Parser extends AsyncTask<Void, Void, String> {
@@ -162,27 +163,37 @@ public class Parser extends AsyncTask<Void, Void, String> {
 
         //Create new circle at destination coordinates
         CircleOptions circleOptions = new CircleOptions()
-                .center(new LatLng(lat,lng))
+                .center(new LatLng(lat, lng))
                 .radius(200); // In meters
 
         //Draw circle on map
         Circle circle = this.googleMap.addCircle(circleOptions);
 
         //Start timer
-        startTimer(durationValue*1000);
+        startTimer(durationValue * 1000);
 
         //TODO: this is useless get rid?
         IntentFilter filter = new IntentFilter();
+
+        ArrayList<LatLng> allPoints = new ArrayList<>(decodedPath);
+        ArrayList<LatLng> geoPoints = new ArrayList<>();
 
         GeofenceBuilder3 generator3;
         Place start;
         Place loc;
         int time;
+        int i = 0;
+        int j;
 
-        for (int i = 1; i < offcourse.length(); i++) {
-
-            generator3 = new GeofenceBuilder3(context, i loc.toLatLng(), 200, time, googleMap);
-            generator3.addGeofence3();
+        while (i < allPoints.size()) {
+            for (j = 0; j <= 4; j++) {
+                geoPoints.set(j,allPoints.get(i));
+                generator3 = new GeofenceBuilder3(context, i, geoPoints.get(j), 200, 60, googleMap);
+                generator3.addGeofence3();
+                i++;
+            }
+            i++;
+            j = 0;
         }
     }
 

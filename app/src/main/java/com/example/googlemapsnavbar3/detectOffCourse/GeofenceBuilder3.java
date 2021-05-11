@@ -59,7 +59,7 @@ public class GeofenceBuilder3 {
         broadcastReceiver3 = new GeofenceBroadcastReceiver3();
     }
 
-    private void addGeofence3() {
+    public void addGeofence3() {
         //build the geofence object
         Geofence geofence = geofenceHelper3.getGeofence3(geofence_ID, latLng, radius,
                 Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL);

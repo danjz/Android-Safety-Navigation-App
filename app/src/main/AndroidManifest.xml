@@ -47,14 +47,12 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="API_KEY_HERE" />
+            android:value="AIzaSyAdyk3GTqps6e2APdTjsS1CDe8kjcBbn1k" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".SavedContacts">
-
+        <activity android:name=".MainActivity">
         </activity>
         <activity android:name=".SavedDestinations">
         </activity>
